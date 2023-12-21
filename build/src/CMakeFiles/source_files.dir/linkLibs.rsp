@@ -1,0 +1,1 @@
+  -LC:/Users/rkmun/source/repos/VoxelEngine/source_files  -LC:/Users/rkmun/source/repos/VoxelEngine/PRIVATE  -L"C:/Users/rkmun/source/repos/VoxelEngine/Dependencies/lib-mingw-w64"  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

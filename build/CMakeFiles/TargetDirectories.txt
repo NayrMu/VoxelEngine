@@ -1,0 +1,5 @@
+C:/Users/rkmun/source/repos/VoxelEngine/build/CMakeFiles/edit_cache.dir
+C:/Users/rkmun/source/repos/VoxelEngine/build/CMakeFiles/rebuild_cache.dir
+C:/Users/rkmun/source/repos/VoxelEngine/build/src/CMakeFiles/source_files.dir
+C:/Users/rkmun/source/repos/VoxelEngine/build/src/CMakeFiles/edit_cache.dir
+C:/Users/rkmun/source/repos/VoxelEngine/build/src/CMakeFiles/rebuild_cache.dir
