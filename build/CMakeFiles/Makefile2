@@ -95,12 +95,12 @@ src/clean: src/CMakeFiles/source_files.dir/clean
 src/CMakeFiles/source_files.dir/all:
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/depend
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=1,2 "Built target source_files"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=1,2,3,4 "Built target source_files"
 .PHONY : src/CMakeFiles/source_files.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/source_files.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/source_files.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles 0
 .PHONY : src/CMakeFiles/source_files.dir/rule

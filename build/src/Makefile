@@ -129,6 +129,54 @@ source_files/fast:
 	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/build
 .PHONY : source_files/fast
 
+Voxel/Voxel.obj: Voxel/Voxel.c.obj
+.PHONY : Voxel/Voxel.obj
+
+# target to build an object file
+Voxel/Voxel.c.obj:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj
+.PHONY : Voxel/Voxel.c.obj
+
+Voxel/Voxel.i: Voxel/Voxel.c.i
+.PHONY : Voxel/Voxel.i
+
+# target to preprocess a source file
+Voxel/Voxel.c.i:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.i
+.PHONY : Voxel/Voxel.c.i
+
+Voxel/Voxel.s: Voxel/Voxel.c.s
+.PHONY : Voxel/Voxel.s
+
+# target to generate assembly for a file
+Voxel/Voxel.c.s:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.s
+.PHONY : Voxel/Voxel.c.s
+
+glad.obj: glad.c.obj
+.PHONY : glad.obj
+
+# target to build an object file
+glad.c.obj:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/glad.c.obj
+.PHONY : glad.c.obj
+
+glad.i: glad.c.i
+.PHONY : glad.i
+
+# target to preprocess a source file
+glad.c.i:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/glad.c.i
+.PHONY : glad.c.i
+
+glad.s: glad.c.s
+.PHONY : glad.s
+
+# target to generate assembly for a file
+glad.c.s:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/glad.c.s
+.PHONY : glad.c.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -162,6 +210,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... source_files
+	@echo ... Voxel/Voxel.obj
+	@echo ... Voxel/Voxel.i
+	@echo ... Voxel/Voxel.s
+	@echo ... glad.obj
+	@echo ... glad.i
+	@echo ... glad.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

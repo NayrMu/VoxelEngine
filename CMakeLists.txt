@@ -6,10 +6,9 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-
-include_directories(source_files PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/include)
-link_directories(source_files PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/lib-mingw-w64)
-
 project("VoxelEngine")
+
+include_directories(source_files PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/include)
+link_directories(source_files PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-mingw-w64)
 
 add_subdirectory("src")

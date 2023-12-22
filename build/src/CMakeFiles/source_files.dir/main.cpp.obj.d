@@ -142,8 +142,10 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/ostream.tcc \
  C:/msys64/ucrt64/include/c++/13.1.0/istream \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/istream.tcc \
- C:/Users/rkmun/source/repos/VoxelEngine/Dependencies/include/glad/glad.h \
+ C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
  C:/msys64/ucrt64/include/KHR/khrplatform.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h \
  C:/msys64/ucrt64/include/stdint.h \
- C:/Users/rkmun/source/repos/VoxelEngine/Dependencies/include/GLFW/glfw3.h
+ C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h \
+ C:\Users\rkmun\source\repos\VoxelEngine\src\GMath/GMath.h \
+ C:\Users\rkmun\source\repos\VoxelEngine\src\Voxel/Voxel.h

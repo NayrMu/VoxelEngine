@@ -83,19 +83,53 @@ src/CMakeFiles/source_files.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/source_files.dir/main.cpp.s"
 	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\rkmun\source\repos\VoxelEngine\src\main.cpp -o CMakeFiles\source_files.dir\main.cpp.s
 
+src/CMakeFiles/source_files.dir/glad.c.obj: src/CMakeFiles/source_files.dir/flags.make
+src/CMakeFiles/source_files.dir/glad.c.obj: src/CMakeFiles/source_files.dir/includes_C.rsp
+src/CMakeFiles/source_files.dir/glad.c.obj: C:/Users/rkmun/source/repos/VoxelEngine/src/glad.c
+src/CMakeFiles/source_files.dir/glad.c.obj: src/CMakeFiles/source_files.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object src/CMakeFiles/source_files.dir/glad.c.obj"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/source_files.dir/glad.c.obj -MF CMakeFiles\source_files.dir\glad.c.obj.d -o CMakeFiles\source_files.dir\glad.c.obj -c C:\Users\rkmun\source\repos\VoxelEngine\src\glad.c
+
+src/CMakeFiles/source_files.dir/glad.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/source_files.dir/glad.c.i"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\rkmun\source\repos\VoxelEngine\src\glad.c > CMakeFiles\source_files.dir\glad.c.i
+
+src/CMakeFiles/source_files.dir/glad.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/source_files.dir/glad.c.s"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\rkmun\source\repos\VoxelEngine\src\glad.c -o CMakeFiles\source_files.dir\glad.c.s
+
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj: src/CMakeFiles/source_files.dir/flags.make
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj: src/CMakeFiles/source_files.dir/includes_C.rsp
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj: C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel/Voxel.c
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj: src/CMakeFiles/source_files.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj -MF CMakeFiles\source_files.dir\Voxel\Voxel.c.obj.d -o CMakeFiles\source_files.dir\Voxel\Voxel.c.obj -c C:\Users\rkmun\source\repos\VoxelEngine\src\Voxel\Voxel.c
+
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/source_files.dir/Voxel/Voxel.c.i"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\rkmun\source\repos\VoxelEngine\src\Voxel\Voxel.c > CMakeFiles\source_files.dir\Voxel\Voxel.c.i
+
+src/CMakeFiles/source_files.dir/Voxel/Voxel.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/source_files.dir/Voxel/Voxel.c.s"
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && C:\msys64\ucrt64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\rkmun\source\repos\VoxelEngine\src\Voxel\Voxel.c -o CMakeFiles\source_files.dir\Voxel\Voxel.c.s
+
 # Object files for target source_files
 source_files_OBJECTS = \
-"CMakeFiles/source_files.dir/main.cpp.obj"
+"CMakeFiles/source_files.dir/main.cpp.obj" \
+"CMakeFiles/source_files.dir/glad.c.obj" \
+"CMakeFiles/source_files.dir/Voxel/Voxel.c.obj"
 
 # External object files for target source_files
 source_files_EXTERNAL_OBJECTS =
 
 src/source_files.exe: src/CMakeFiles/source_files.dir/main.cpp.obj
+src/source_files.exe: src/CMakeFiles/source_files.dir/glad.c.obj
+src/source_files.exe: src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj
 src/source_files.exe: src/CMakeFiles/source_files.dir/build.make
 src/source_files.exe: src/CMakeFiles/source_files.dir/linkLibs.rsp
 src/source_files.exe: src/CMakeFiles/source_files.dir/objects1.rsp
 src/source_files.exe: src/CMakeFiles/source_files.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable source_files.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\rkmun\source\repos\VoxelEngine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable source_files.exe"
 	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build\src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\source_files.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
