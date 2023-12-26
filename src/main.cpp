@@ -1,10 +1,11 @@
 /*
 *  Date Started 12/21/2023
 *  Date Last Modified 12/24/2023
-*  Hours Worked ~7.5
+*  Hours Worked ~11.5
 *
 *  TODO:
-*  1. Fix Undefined error for all self created library functions
+*  3. Implement Texture Atlas
+*  4. Implement own face culling
 */
 
 #include <iostream>
@@ -15,6 +16,7 @@
 #include "GMath/GMath.h" // math before voxel
 #include "Voxel/Voxel.h"
 #include "Shader/Shader.h"
+
 #include <vector>
 
 #include "stb_image.h"
@@ -26,12 +28,25 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
 
-struct vec3 cameraPos = {8.0f, 50.0f, 8.0f};
+struct vec3 cameraPos = {0.0f, 0.0f, 3.0f};
 struct vec3 cameraFront = {0.0f, 0.0f, -1.0f};
 struct vec3 lookVec;
 struct vec3 xAxis = {1.0f, 0.0f, 0.0f};
 struct vec3 yAxis = {0.0f, 1.0f, 0.0f};
 struct vec3 zAxis = {0.0f, 0.0f, 1.0f};
+
+bool firstMouse = true;
+float yaw   = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch =  0.0f;
+float lastX =  800.0f / 2.0;
+float lastY =  600.0 / 2.0;
+float fov   =  45.0f;
+
+float currentTime;
+float elapsedTime;
+float lastTime;
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 const char *vertexShaderSource = 
     "#version 330 core\n"
@@ -62,7 +77,7 @@ int main() {
     
     struct Voxel voxel;
     _InitVoxel(&voxel);
-
+    
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -95,30 +110,9 @@ int main() {
 
     Shader shaderProgram = shader_create(vertexShaderSource, fragmentShaderSouce);
 
-
-    int width, height, nrChannels;
-
     unsigned int textureGrass;
-    glGenTextures(1, &textureGrass);
-    glBindTexture(GL_TEXTURE_2D, textureGrass);
-    // set the texture wrapping/filtering options (on the currently bound texture
-    // object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // load and generate the texture
-    unsigned char *dataGrass =
-        stbi_load("C:/Users/rkmun/source/repos/VoxelEngine/src/NewPiskel.jpg", &width, &height, &nrChannels, 0);
-    if (dataGrass) {
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-                  GL_UNSIGNED_BYTE, dataGrass);
-      glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-      printf("Failed to load texture\n%s", stbi_failure_reason());
-    }
-    stbi_image_free(dataGrass);
+    const char* grassFile = "../../src/GrassAtlas.png";
+    shader_addTexture(grassFile, &textureGrass);
     
     std::vector<float> allData;
     allData.insert(allData.end(), std::begin(voxel.eastFace), std::end(voxel.eastFace));
@@ -132,39 +126,23 @@ int main() {
     std::copy(allData.begin(), allData.end(), verticesArray);
 
     unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(voxel.indices), &voxel.indices[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesArray), &verticesArray[0], GL_STATIC_DRAW);
-    // apos attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    shader_ArrBuffs(VAO, VBO, verticesArray, sizeof(verticesArray));
 
     struct mat4 projectionMat = makeProjectionMatrix(45.0f, 0.1f, 100.0f, (float)SCR_WIDTH, (float)SCR_HEIGHT);
+    
     while (!glfwWindowShouldClose(window)) {
     
       processInput(window);
       
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      glEnable(GL_DEPTH_TEST);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       
 
       lookVec = addVectors(cameraPos, cameraFront);
-      //struct mat4 viewMat = makeLookAtMatrix(cameraPos, lookVec, yAxis);
-      struct mat4 viewMat = makeIdentityMatrix();
+      struct mat4 viewMat = makeLookAtMatrix(cameraPos, lookVec, yAxis);
 
       int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
       glUniformMatrix4fv(viewLoc, 1, GL_TRUE, (GLfloat*)&viewMat.m);
@@ -174,8 +152,6 @@ int main() {
       struct mat4 modelMatrix = makeIdentityMatrix();
       struct quaternion quat = axisAngleToQuaternion(xAxis, 10.0f);
       quatRot(quat, &modelMatrix);
-      struct vec3 mV = {0.0f, 0.0f, -3.0f};
-      translate(mV, &modelMatrix);
 
 
       int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
@@ -187,11 +163,14 @@ int main() {
 
       glBindVertexArray(VAO);
       glDrawArrays(GL_TRIANGLES, 0, 36);
-      //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
       glfwSwapInterval(0);
       glfwSwapBuffers(window);
       glfwPollEvents();
+
+      float currentFrame = glfwGetTime();
+      deltaTime = currentFrame - lastFrame;
+      lastFrame = currentFrame; 
     }
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -205,9 +184,66 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
     glfwSetWindowShouldClose(window, 1);
   }
+  float cameraSpeed = 2.0f * deltaTime; // adjust accordingly
+  struct vec3 vecA;
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    vecA = VscalarMulitply(cameraSpeed, cameraFront);
+    cameraPos = addVectors(cameraPos, vecA);
+  }
+    //normalize3d(&cameraPos);
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    vecA = VscalarMulitply(cameraSpeed, cameraFront);
+    cameraPos = subtractVectors(cameraPos, vecA);
+  }
+    //normalize3d(&cameraPos);
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    vecA = crossProduct(cameraFront, yAxis);
+    normalize3d(&vecA);
+    vecA = VscalarMulitply(cameraSpeed, vecA);
+    cameraPos = subtractVectors(cameraPos, vecA);
+  }
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    vecA = crossProduct(cameraFront, yAxis);
+    normalize3d(&vecA);
+    vecA = VscalarMulitply(cameraSpeed, vecA);
+    cameraPos = addVectors(cameraPos, vecA);
+  }
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    
+  }
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+  if (firstMouse)
+  {
+      lastX = xpos;
+      lastY = ypos;
+      firstMouse = false;
+  }
+  
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos; 
+  lastX = xpos;
+  lastY = ypos;
+
+  float sensitivity = 0.1f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+
+  yaw   += xoffset;
+  pitch += yoffset;
+
+  if(pitch > 89.0f)
+      pitch = 89.0f;
+  if(pitch < -89.0f)
+      pitch = -89.0f;
+
+  struct vec3 direction;
+  direction.x = cos(yaw * (3.14159 / 180)) * cos(pitch * (3.14159 / 180));
+  direction.y = sin(pitch * (3.14159 / 180));
+  direction.z = sin(yaw * (3.14159 / 180)) * cos(pitch * (3.14159 / 180));
+  normalize3d(&direction);
+  cameraFront = direction;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {

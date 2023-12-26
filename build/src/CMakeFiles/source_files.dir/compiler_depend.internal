@@ -317,6 +317,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj
  C:/Users/rkmun/source/repos/VoxelEngine/src/main.cpp
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h
+ C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h
  C:/msys64/ucrt64/include/KHR/khrplatform.h
  C:/msys64/ucrt64/include/_mingw.h
  C:/msys64/ucrt64/include/_mingw_mac.h

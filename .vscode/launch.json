@@ -8,8 +8,8 @@
             "args": [],
             "stopAtEntry": false,
             "externalConsole": true,
-            "cwd": "c:/Users/rkmun/source/repos/VoxelEngine/src",
-            "program": "c:/Users/rkmun/source/repos/VoxelEngine/src/build/Debug/outDebug",
+            "cwd": "${workspaceFolder}",
+            "program": "c:/Users/rkmun/source/repos/VoxelEngine/build/Debug/outDebug",
             "MIMode": "gdb",
             "miDebuggerPath": "gdb",
             "setupCommands": [

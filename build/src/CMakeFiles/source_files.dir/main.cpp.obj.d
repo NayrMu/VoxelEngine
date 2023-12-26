@@ -169,6 +169,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: \
  C:/msys64/ucrt64/include/string.h \
  C:/msys64/ucrt64/include/sec_api/string_s.h \
  C:\Users\rkmun\source\repos\VoxelEngine\src\Shader/Shader.h \
+ C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h \
  C:/msys64/ucrt64/include/c++/13.1.0/vector \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_uninitialized.h \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_vector.h \
