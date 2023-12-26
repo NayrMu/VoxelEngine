@@ -17,6 +17,7 @@
 			"link_directories",
 			"target_link_libraries",
 			"include_directories",
+			"target_include_directories",
 			"set_property"
 		],
 		"files" : 
@@ -47,7 +48,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 9,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
@@ -59,7 +60,13 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 12,
+				"line" : 8,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 14,
 				"parent" : 0
 			}
 		]
@@ -86,6 +93,18 @@
 				{
 					"backtrace" : 5,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/GMath"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Shader"
 				}
 			],
 			"language" : "CXX",
@@ -93,7 +112,7 @@
 			{
 				"backtraces" : 
 				[
-					6
+					7
 				],
 				"standard" : "20"
 			},
@@ -122,6 +141,18 @@
 				{
 					"backtrace" : 5,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/GMath"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Shader"
 				}
 			],
 			"language" : "C",
@@ -208,7 +239,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "src/Voxel/Voxel.c",
+			"path" : "src/STBIMAGE.c",
 			"sourceGroupIndex" : 0
 		}
 	],

@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/source_files.dir/Voxel/Voxel.c.obj"
-  "CMakeFiles/source_files.dir/Voxel/Voxel.c.obj.d"
+  "CMakeFiles/source_files.dir/STBIMAGE.c.obj"
+  "CMakeFiles/source_files.dir/STBIMAGE.c.obj.d"
   "CMakeFiles/source_files.dir/glad.c.obj"
   "CMakeFiles/source_files.dir/glad.c.obj.d"
   "CMakeFiles/source_files.dir/main.cpp.obj"

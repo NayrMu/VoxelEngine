@@ -112,7 +112,7 @@ CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/rkmun/source/repos/VoxelEngine/
 CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/learnOpenGL
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/VoxelEngine
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/msys64/ucrt64/bin/ld.exe
@@ -249,15 +249,6 @@ VoxelEngine_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 VoxelEngine_SOURCE_DIR:STATIC=C:/Users/rkmun/source/repos/VoxelEngine
-
-//Value Computed by CMake
-learnOpenGL_BINARY_DIR:STATIC=C:/Users/rkmun/source/repos/VoxelEngine/build
-
-//Value Computed by CMake
-learnOpenGL_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-learnOpenGL_SOURCE_DIR:STATIC=C:/Users/rkmun/source/repos/VoxelEngine
 
 
 ########################

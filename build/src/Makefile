@@ -129,29 +129,29 @@ source_files/fast:
 	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/build
 .PHONY : source_files/fast
 
-Voxel/Voxel.obj: Voxel/Voxel.c.obj
-.PHONY : Voxel/Voxel.obj
+STBIMAGE.obj: STBIMAGE.c.obj
+.PHONY : STBIMAGE.obj
 
 # target to build an object file
-Voxel/Voxel.c.obj:
-	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj
-.PHONY : Voxel/Voxel.c.obj
+STBIMAGE.c.obj:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/STBIMAGE.c.obj
+.PHONY : STBIMAGE.c.obj
 
-Voxel/Voxel.i: Voxel/Voxel.c.i
-.PHONY : Voxel/Voxel.i
+STBIMAGE.i: STBIMAGE.c.i
+.PHONY : STBIMAGE.i
 
 # target to preprocess a source file
-Voxel/Voxel.c.i:
-	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.i
-.PHONY : Voxel/Voxel.c.i
+STBIMAGE.c.i:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/STBIMAGE.c.i
+.PHONY : STBIMAGE.c.i
 
-Voxel/Voxel.s: Voxel/Voxel.c.s
-.PHONY : Voxel/Voxel.s
+STBIMAGE.s: STBIMAGE.c.s
+.PHONY : STBIMAGE.s
 
 # target to generate assembly for a file
-Voxel/Voxel.c.s:
-	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/Voxel/Voxel.c.s
-.PHONY : Voxel/Voxel.c.s
+STBIMAGE.c.s:
+	cd /d C:\Users\rkmun\source\repos\VoxelEngine\build && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\source_files.dir\build.make src/CMakeFiles/source_files.dir/STBIMAGE.c.s
+.PHONY : STBIMAGE.c.s
 
 glad.obj: glad.c.obj
 .PHONY : glad.obj
@@ -210,9 +210,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... source_files
-	@echo ... Voxel/Voxel.obj
-	@echo ... Voxel/Voxel.i
-	@echo ... Voxel/Voxel.s
+	@echo ... STBIMAGE.obj
+	@echo ... STBIMAGE.i
+	@echo ... STBIMAGE.s
 	@echo ... glad.obj
 	@echo ... glad.i
 	@echo ... glad.s

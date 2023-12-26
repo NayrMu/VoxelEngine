@@ -13,8 +13,8 @@
 },
 {
   "directory": "C:/Users/rkmun/source/repos/VoxelEngine/build/src",
-  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -o CMakeFiles\\source_files.dir\\Voxel\\Voxel.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\Voxel\\Voxel.c",
-  "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel/Voxel.c",
-  "output": "src/CMakeFiles/source_files.dir/Voxel/Voxel.c.obj"
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -o CMakeFiles\\source_files.dir\\STBIMAGE.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\STBIMAGE.c",
+  "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/STBIMAGE.c",
+  "output": "src/CMakeFiles/source_files.dir/STBIMAGE.c.obj"
 }
 ]

@@ -1,48 +1,137 @@
 #pragma once 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <string.h>
 
 struct Voxel {
 
-    float northFace[12];
+    float northFace[30];
 
-    float eastFace[12];
+    float eastFace[30];
 
-    /*struct Face southFace = {
-        { 0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f}
-    };
+    float southFace[30];
 
-    struct Face westFace = {
-        {-0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f}
-    };
+    float westFace[30];
 
-    struct Face frontFace = {
-        {-0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         -0.5f,  0.5f, -0.5f}
-    };
+    float frontFace[30];
 
-    struct Face backFace = {
-        {-0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5,
-        -0.5f, -0.5f,  0.5f}
-    };*/
-
+    float backFace[30];
+    
     unsigned int indices[6];
 
 };
 
-void _InitVoxel(struct Voxel* voxel);
+const float bFace[30] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+};
 
-#ifdef __cplusplus
+const float fFace[30] = {
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+};
+
+const float wFace[30] = {
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+};
+
+const float eFace[30] = {
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+};
+
+const float sFace[30] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+};
+
+float nFace[30] = {
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+/*const float nFace[20] = {
+    -0.5f, 0.5f, -0.5f,    0.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,     1.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,    1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
+};
+
+const float eFace[20] = {
+    0.5f, 0.5f, -0.5f,     0.0f, 1.0f,
+    0.5f, 0.5f, 0.5f,      1.0f, 1.0f,
+    0.5f, -0.5f, 0.5f,     1.0f, 0.0f,
+    0.5f, -0.5f, -0.5f,    0.0f, 0.0f
+};
+
+const float sFace[20] = {
+    0.5f,  0.5f,  0.5f,    0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
+    0.5f, -0.5f,  0.5f,    0.0f, 0.0f
+};
+
+const float wFace[20] = {
+    -0.5f,  0.5f,  0.5f,   0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,   1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f
+};
+
+const float fFace[20] = {
+    -0.5f,  0.5f,  -0.5f,  0.0f, 1.0f,
+    0.5f,  0.5f,  -0.5f,   1.0f, 1.0f,
+    0.5f,  -0.5f, -0.5f,   1.0f, 0.0f,
+    -0.5f,  -0.5f, -0.5f,  0.0f, 0.0f
+};
+
+float bFace[20] = {
+    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,    1.0f, 1.0f,
+    0.5f, -0.5f,  0.5,     1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f
+};*/
+
+
+unsigned int indices[6] = {0, 1, 2, 2, 3, 0};
+
+void _InitVoxel(struct Voxel* voxel) {
+    
+    memcpy(voxel->northFace, nFace, sizeof(nFace));
+
+    memcpy(voxel->eastFace, eFace, sizeof(eFace));
+
+    memcpy(voxel->southFace, sFace, sizeof(sFace));
+
+    memcpy(voxel->westFace, wFace, sizeof(wFace));
+
+    memcpy(voxel->frontFace, fFace, sizeof(fFace));
+
+    memcpy(voxel->backFace, bFace, sizeof(bFace));
+
+    memcpy(voxel->indices, indices, sizeof(indices));
+
 }
-#endif

@@ -2,8 +2,10 @@
 add_executable(source_files
     "main.cpp"
     "glad.c"
-    "Voxel/Voxel.c"
+    "STBIMAGE.c"
 )
+
+target_include_directories(source_files PRIVATE "GMath" "Voxel" "Shader")
 
 # Link against GLFW
 target_link_libraries(source_files PRIVATE glfw3)

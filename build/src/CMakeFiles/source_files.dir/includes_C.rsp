@@ -1,1 +1,1 @@
--IC:/Users/rkmun/source/repos/VoxelEngine/source_files -IC:/Users/rkmun/source/repos/VoxelEngine/PRIVATE -IC:/Users/rkmun/source/repos/VoxelEngine/dependencies/include
+-IC:/Users/rkmun/source/repos/VoxelEngine/source_files -IC:/Users/rkmun/source/repos/VoxelEngine/PRIVATE -IC:/Users/rkmun/source/repos/VoxelEngine/dependencies/include -IC:/Users/rkmun/source/repos/VoxelEngine/src/GMath -IC:/Users/rkmun/source/repos/VoxelEngine/src/Voxel -IC:/Users/rkmun/source/repos/VoxelEngine/src/Shader
