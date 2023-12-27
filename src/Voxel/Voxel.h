@@ -2,24 +2,6 @@
 #include <string.h>
 
 
-
-struct Voxel {
-
-    float northFace[30];
-
-    float eastFace[30];
-
-    float southFace[30];
-
-    float westFace[30];
-
-    float frontFace[30];
-
-    float backFace[30];
-    
-    unsigned int indices[6];
-
-};
 const int atlasWidth = 24;
 const int atlasHeight = 8;
 const int numTextures = 3;
@@ -100,21 +82,3 @@ float nFace[30] = {
 };
 
 unsigned int indices[6] = {0, 1, 2, 2, 3, 0};
-
-void _InitVoxel(struct Voxel* voxel) {
-    
-    memcpy(voxel->northFace, nFace, sizeof(nFace));
-
-    memcpy(voxel->eastFace, eFace, sizeof(eFace));
-
-    memcpy(voxel->southFace, sFace, sizeof(sFace));
-
-    memcpy(voxel->westFace, wFace, sizeof(wFace));
-
-    memcpy(voxel->frontFace, fFace, sizeof(fFace));
-
-    memcpy(voxel->backFace, bFace, sizeof(bFace));
-
-    memcpy(voxel->indices, indices, sizeof(indices));
-
-}
