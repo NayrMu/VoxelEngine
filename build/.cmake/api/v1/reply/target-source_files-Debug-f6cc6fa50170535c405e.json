@@ -16,6 +16,7 @@
 			"add_executable",
 			"link_directories",
 			"target_link_libraries",
+			"target_compile_options",
 			"include_directories",
 			"target_include_directories",
 			"set_property"
@@ -53,18 +54,24 @@
 			},
 			{
 				"command" : 3,
+				"file" : 0,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
 				"file" : 1,
 				"line" : 11,
 				"parent" : 2
 			},
 			{
-				"command" : 4,
+				"command" : 5,
 				"file" : 0,
 				"line" : 8,
 				"parent" : 0
 			},
 			{
-				"command" : 5,
+				"command" : 6,
 				"file" : 0,
 				"line" : 14,
 				"parent" : 0
@@ -78,32 +85,36 @@
 			[
 				{
 					"fragment" : "-g -std=gnu++20"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-O2"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/source_files"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/PRIVATE"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/GMath"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Shader"
 				}
 			],
@@ -112,7 +123,7 @@
 			{
 				"backtraces" : 
 				[
-					7
+					8
 				],
 				"standard" : "20"
 			},
@@ -126,32 +137,36 @@
 			[
 				{
 					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-O2"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/source_files"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/PRIVATE"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 6,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/GMath"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 7,
 					"path" : "C:/Users/rkmun/source/repos/VoxelEngine/src/Shader"
 				}
 			],

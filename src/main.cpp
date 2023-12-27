@@ -4,7 +4,6 @@
 *  Hours Worked ~11.5
 *
 *  TODO:
-*  3. Implement Texture Atlas
 *  4. Implement own face culling
 */
 
@@ -18,6 +17,7 @@
 #include "Shader/Shader.h"
 
 #include <vector>
+#include <stdio.h>
 
 #include "stb_image.h"
 
@@ -113,15 +113,96 @@ int main() {
     unsigned int textureGrass;
     const char* grassFile = "../../src/GrassAtlas.png";
     shader_addTexture(grassFile, &textureGrass);
+    unsigned int textureDirt;
+    const char* dirtFile = "../../src/DirtAtlas.png";
+    shader_addTexture(dirtFile, &textureDirt);
+
+    int chunkSize = 8;
+    int gameWorld[chunkSize][chunkSize] = {
+      {0, 0, 1, 0, 0, 1, 0, 1},
+      {0, 1, 1, 0, 0, 1, 0, 1},
+      {0, 1, 0, 0, 0, 1, 0, 1},
+      {1, 1, 1, 0, 0, 1, 0, 1},
+      {1, 1, 0, 0, 0, 1, 0, 1},
+      {1, 1, 1, 0, 0, 1, 0, 1},
+      {1, 1, 1, 0, 0, 1, 0, 1},
+      {1, 1, 1, 0, 0, 1, 0, 1},
+    };
+
+    
     
     std::vector<float> allData;
-    allData.insert(allData.end(), std::begin(voxel.eastFace), std::end(voxel.eastFace));
-    allData.insert(allData.end(), std::begin(voxel.northFace), std::end(voxel.northFace));
-    allData.insert(allData.end(), std::begin(voxel.southFace), std::end(voxel.southFace));
-    allData.insert(allData.end(), std::begin(voxel.westFace), std::end(voxel.westFace));
-    allData.insert(allData.end(), std::begin(voxel.frontFace), std::end(voxel.frontFace));
-    allData.insert(allData.end(), std::begin(voxel.backFace), std::end(voxel.backFace));
+    allData.reserve(92160);
 
+    for (int i = 0; i < chunkSize; i++) {
+      for (int j = 0; j < chunkSize; j++) {
+        if (gameWorld[i][j] == 1) {
+          struct vec3 transform = {(float)j, 0.0f, (float)i};
+          float temp[30] = {0};
+          if (j > 0 && j < chunkSize-1) { // if not end of row
+            if (gameWorld[i][j-1] != 1) { //block to left
+              memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+            if (gameWorld[i][j+1] != 1) { // block to right
+              memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+          }
+          else if (j==0) { // left end of row
+            memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
+            translateQuad(temp, transform);
+            allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            if (gameWorld[i][j+1] != 1) {
+              memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+          }
+          else if (j==chunkSize-1) { // right end of row
+            memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
+            translateQuad(temp, transform);
+            allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            if (gameWorld[i][j-1]!= 1) {
+              memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+          }
+          if ( i > 0 && i < chunkSize-1) {
+            if (gameWorld[i-1][j] != 1) {
+              memcpy(temp, voxel.backFace, sizeof(voxel.backFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+            if (gameWorld[i+1][j] != 1) {
+              memcpy(temp, voxel.frontFace, sizeof(voxel.frontFace));
+              translateQuad(temp, transform);
+              allData.insert(allData.end(), std::begin(temp), std::end(temp));
+            }
+          }
+          else if (i==0) {
+            memcpy(temp, voxel.backFace, sizeof(voxel.backFace));
+            translateQuad(temp, transform);
+            allData.insert(allData.end(), std::begin(temp), std::end(temp));
+          }
+          else if (i==chunkSize-1) {
+            memcpy(temp, voxel.frontFace, sizeof(voxel.frontFace));
+            translateQuad(temp, transform);
+            allData.insert(allData.end(), std::begin(temp), std::end(temp));
+          }
+          memcpy(temp, voxel.northFace, sizeof(voxel.northFace));
+          translateQuad(temp, transform);
+          allData.insert(allData.end(), std::begin(temp), std::end(temp));
+          memcpy(temp, voxel.southFace, sizeof(voxel.southFace));
+          translateQuad(temp, transform);
+          allData.insert(allData.end(), std::begin(temp), std::end(temp));
+        }
+      }
+    }
+    printf("%d", allData.size());
     float verticesArray[allData.size()];
     std::copy(allData.begin(), allData.end(), verticesArray);
 
@@ -129,9 +210,9 @@ int main() {
     shader_ArrBuffs(VAO, VBO, verticesArray, sizeof(verticesArray));
 
     struct mat4 projectionMat = makeProjectionMatrix(45.0f, 0.1f, 100.0f, (float)SCR_WIDTH, (float)SCR_HEIGHT);
-    
+
     while (!glfwWindowShouldClose(window)) {
-    
+      
       processInput(window);
       
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -162,7 +243,8 @@ int main() {
       glBindTexture(GL_TEXTURE_2D, textureGrass);
 
       glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
+      glDrawArrays(GL_TRIANGLES, 0, sizeof(verticesArray)/5);
+      
 
       glfwSwapInterval(0);
       glfwSwapBuffers(window);

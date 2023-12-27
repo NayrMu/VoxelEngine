@@ -24,6 +24,8 @@ struct mat4 makeLookAtMatrix(struct vec3 eye, struct vec3 target, struct vec3 up
 
 void translate(struct vec3 vec, struct mat4* mat);
 
+void translatePoint(struct vec3 transform, struct vec3* point);
+
 struct vec4 multiplyVectorMatrix(struct vec4 vec, struct mat4 mat);
 
 struct vec3 subtractVectors(struct vec3 vec1, struct vec3 vec2);
@@ -109,6 +111,18 @@ void translate(struct vec3 vec, struct mat4* mat) {
   mat->m[0][3] += vec.x;
   mat->m[1][3] += vec.y;
   mat->m[2][3] += vec.z;
+}
+void translateQuad(float array[], vec3 transform) {
+
+  for (int i = 0; i < 30; ++i) {
+    array[i] = array[i];
+  }
+
+  for (int i = 0; i < 30; i += 5) {
+    array[i] += transform.x;
+    array[i + 1] += transform.y;
+    array[i + 2] += transform.z;
+  }
 }
 
 struct vec4 multiplyVectorMatrix(struct vec4 vec, struct mat4 mat) {
