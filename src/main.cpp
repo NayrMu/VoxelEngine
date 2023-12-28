@@ -11,15 +11,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
+#include "Constants.h"
 #include "GMath/GMath.h" // math before voxel
 #include "Voxel/Voxel.h"
 #include "Shader/Shader.h"
+#include "WorldGen/WorldGen.h"
 
 #include <vector>
 #include <stdio.h>
 
 #include "stb_image.h"
+
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -117,91 +119,61 @@ int main() {
     const char* dirtFile = "../../src/DirtAtlas.png";
     shader_addTexture(dirtFile, &textureDirt);
 
-    int chunkSize = 8;
-    int gameWorld[chunkSize][chunkSize] = {
-      {0, 0, 1, 0, 0, 1, 0, 1},
-      {0, 1, 1, 0, 0, 1, 0, 1},
-      {0, 1, 0, 0, 0, 1, 0, 1},
-      {1, 1, 1, 0, 0, 1, 0, 1},
-      {1, 1, 0, 0, 0, 1, 0, 1},
-      {1, 1, 1, 0, 0, 1, 0, 1},
-      {1, 1, 1, 0, 0, 1, 0, 1},
-      {1, 1, 1, 0, 0, 1, 0, 1},
+    
+    Chunk chunk;
+    chunk.offsetX = 0;
+    chunk.offsetY = 0;
+    chunk.offsetZ = 0;
+    int p[512];
+    struct Ivec4 chungus[C_chunkSize][C_chunkSize][C_chunkSize] = {
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
+      
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
+
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
+
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
+
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
+
+      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
+      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
     };
 
-    
+    generateChunk(C_chunkSize, &chunk, chunk.offsetX, chunk.offsetY, chunk.offsetZ, p);
     
     std::vector<float> allData;
     allData.reserve(92160);
-
-    for (int i = 0; i < chunkSize; i++) {
-      for (int j = 0; j < chunkSize; j++) {
-        if (gameWorld[i][j] == 1) {
-          struct vec3 transform = {(float)j, 0.0f, (float)i};
-          float temp[30] = {0};
-          if (j > 0 && j < chunkSize-1) { // if not end of row
-            if (gameWorld[i][j-1] != 1) { //block to left
-              memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-            if (gameWorld[i][j+1] != 1) { // block to right
-              memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-          }
-          else if (j==0) { // left end of row
-            memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
-            translateQuad(temp, transform);
-            allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            if (gameWorld[i][j+1] != 1) {
-              memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-          }
-          else if (j==chunkSize-1) { // right end of row
-            memcpy(temp, voxel.eastFace, sizeof(voxel.eastFace));
-            translateQuad(temp, transform);
-            allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            if (gameWorld[i][j-1]!= 1) {
-              memcpy(temp, voxel.westFace, sizeof(voxel.westFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-          }
-          if ( i > 0 && i < chunkSize-1) {
-            if (gameWorld[i-1][j] != 1) {
-              memcpy(temp, voxel.backFace, sizeof(voxel.backFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-            if (gameWorld[i+1][j] != 1) {
-              memcpy(temp, voxel.frontFace, sizeof(voxel.frontFace));
-              translateQuad(temp, transform);
-              allData.insert(allData.end(), std::begin(temp), std::end(temp));
-            }
-          }
-          else if (i==0) {
-            memcpy(temp, voxel.backFace, sizeof(voxel.backFace));
-            translateQuad(temp, transform);
-            allData.insert(allData.end(), std::begin(temp), std::end(temp));
-          }
-          else if (i==chunkSize-1) {
-            memcpy(temp, voxel.frontFace, sizeof(voxel.frontFace));
-            translateQuad(temp, transform);
-            allData.insert(allData.end(), std::begin(temp), std::end(temp));
-          }
-          memcpy(temp, voxel.northFace, sizeof(voxel.northFace));
-          translateQuad(temp, transform);
-          allData.insert(allData.end(), std::begin(temp), std::end(temp));
-          memcpy(temp, voxel.southFace, sizeof(voxel.southFace));
-          translateQuad(temp, transform);
-          allData.insert(allData.end(), std::begin(temp), std::end(temp));
-        }
-      }
-    }
+    cullChunk(&allData, chunk.chunk, C_chunkSize, voxel);
     printf("%d", allData.size());
     float verticesArray[allData.size()];
     std::copy(allData.begin(), allData.end(), verticesArray);
@@ -231,8 +203,6 @@ int main() {
       glUniformMatrix4fv(projectionLoc, 1, GL_TRUE, (GLfloat*)&projectionMat.m);
 
       struct mat4 modelMatrix = makeIdentityMatrix();
-      struct quaternion quat = axisAngleToQuaternion(xAxis, 10.0f);
-      quatRot(quat, &modelMatrix);
 
 
       int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");

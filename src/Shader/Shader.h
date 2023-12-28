@@ -105,13 +105,13 @@ void shader_addTexture(const char* image, unsigned int* texture) {
   stbi_image_free(data);
 }
 
-void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float array[], size_t size) {
+void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t size) {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, size, array, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, size, &array[0], GL_STATIC_DRAW);
   // apos attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);

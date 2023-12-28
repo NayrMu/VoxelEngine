@@ -1,7 +1,7 @@
 #pragma once 
 #include <string.h>
 
-
+#include "../Constants.h"
 
 struct Voxel {
 
@@ -21,77 +21,87 @@ struct Voxel {
 
 };
 
-const int atlasWidth = 24;
-const int atlasHeight = 8;
-const int numTextures = 3;
-// Calculate the width and height of each individual texture
-const float textureWidth = 1.0f / (float)numTextures;
-const float textureHeight = 1.0f;
+struct Chunk {
+    struct Ivec4 chunk [C_chunkSize][C_chunkSize][C_chunkSize];
 
-struct vec2 faceTextureCoords[3] = {
-    {0.0f, 0.0f},
-    {0.333f, 0.0f},
-    {0.666f, 0.0f}
+    int offsetX;
+    int offsetY;
+    int offsetZ;
 };
 
-const float bFace[30] = {
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-     0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-     0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-     0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-    -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-};
 
-const float fFace[30] = {
-    -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-     0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-     0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-     0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-    -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-    -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-};
-
-const float wFace[30] = {
-    -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-    -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-    -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-    -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-};
-
-const float eFace[30] = {
-    0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-    0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-    0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-    0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-    0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-    0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-};
-
-const float sFace[30] = {
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
-     0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y,
-     0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-     0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-    -0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
-    -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
-};
-
-float nFace[30] = {
-    -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
-     0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y,
-     0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
-     0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
-    -0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y + textureHeight,
-    -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
-};
 
 
 unsigned int indices[6] = {0, 1, 2, 2, 3, 0};
 
 void _InitVoxel(struct Voxel* voxel) {
+
+    const int atlasWidth = 24;
+    const int atlasHeight = 8;
+    const int numTextures = 3;
+    // Calculate the width and height of each individual texture
+    const float textureWidth = 1.0f / (float)numTextures;
+    const float textureHeight = 1.0f;
+
+    struct vec2 faceTextureCoords[3] = {
+        {0.0f, 0.0f},
+        {0.333f, 0.0f},
+        {0.666f, 0.0f}
+    };
+
+    const float bFace[30] = {
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+    };
+
+    const float fFace[30] = {
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+    };
+
+    const float wFace[30] = {
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+    };
+
+    const float eFace[30] = {
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+    };
+
+    const float sFace[30] = {
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+        0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+    };
+
+    float nFace[30] = {
+        -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
+        0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y + textureHeight,
+        -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
+    };
     
     memcpy(voxel->northFace, nFace, sizeof(nFace));
 
