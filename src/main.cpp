@@ -1,10 +1,12 @@
 /*
 *  Date Started 12/21/2023
-*  Date Last Modified 12/24/2023
-*  Hours Worked ~11.5
+*  Date Last Modified 12/31/2023
+*  Hours Worked ~22.5
 *
 *  TODO:
-*  4. Implement own face culling
+*  1. Implement texture atlas as one large image
+*  2. Implement texture offest at face generation
+*  3. Use different method then .insert()
 */
 
 #include <iostream>
@@ -30,7 +32,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
 
-struct vec3 cameraPos = {0.0f, 0.0f, 3.0f};
+struct vec3 cameraPos = {4.0f, 8.5f, 3.0f};
 struct vec3 cameraFront = {0.0f, 0.0f, -1.0f};
 struct vec3 lookVec;
 struct vec3 xAxis = {1.0f, 0.0f, 0.0f};
@@ -119,67 +121,35 @@ int main() {
     const char* dirtFile = "../../src/DirtAtlas.png";
     shader_addTexture(dirtFile, &textureDirt);
 
-    
-    Chunk chunk;
-    chunk.offsetX = 0;
-    chunk.offsetY = 0;
-    chunk.offsetZ = 0;
-    int p[512];
-    struct Ivec4 chungus[C_chunkSize][C_chunkSize][C_chunkSize] = {
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-      
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-
-      {{{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1}},
-      {{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 1},}},
-    };
-
-    generateChunk(C_chunkSize, &chunk, chunk.offsetX, chunk.offsetY, chunk.offsetZ, p);
-    
+    float verticesArray[15360];
     std::vector<float> allData;
-    allData.reserve(92160);
-    cullChunk(&allData, chunk.chunk, C_chunkSize, voxel);
-    printf("%d", allData.size());
-    float verticesArray[allData.size()];
-    std::copy(allData.begin(), allData.end(), verticesArray);
+    int p[512];
+    std::vector<float*> loadedChunks;
+    int chunkFacialSizes[9];
+    Chunk chunk;
+    generateChunk(C_chunkSize, &chunk, chunk.offsetX, chunk.offsetY, chunk.offsetZ, p);
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        int currentChunkX = cameraPos.x / C_chunkSize;
+        int currentChunkY = cameraPos.y / C_chunkSize;
+        int currentChunkZ = cameraPos.z / C_chunkSize;
+        chunk.offsetX = i + currentChunkX;
+        chunk.offsetY = 0;
+        chunk.offsetZ = j + currentChunkZ;
+
+        cullChunk(&allData, chunk, C_chunkSize, voxel);
+        
+        chunkFacialSizes[i] = allData.size();
+        printf("%d", allData.size());
+        std::copy(allData.begin(), allData.end(), verticesArray);
+        loadedChunks.push_back(verticesArray);
+        
+        allData.clear();
+      }
+    }
+    
 
     unsigned int VBO, VAO;
-    shader_ArrBuffs(VAO, VBO, verticesArray, sizeof(verticesArray));
 
     struct mat4 projectionMat = makeProjectionMatrix(45.0f, 0.1f, 100.0f, (float)SCR_WIDTH, (float)SCR_HEIGHT);
 
@@ -189,6 +159,9 @@ int main() {
       
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glEnable(GL_DEPTH_TEST);
+      glEnable(GL_CULL_FACE);
+      glFrontFace(GL_CCW);
+      glCullFace(GL_FRONT);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -212,8 +185,11 @@ int main() {
 
       glBindTexture(GL_TEXTURE_2D, textureGrass);
 
-      glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, sizeof(verticesArray)/5);
+      for (int i = 0; i < 9; i++) {
+        shader_ArrBuffs(VAO, VBO, loadedChunks[i], chunkFacialSizes[i]);
+        glDrawArrays(GL_TRIANGLES, 0, chunkFacialSizes[i]/5);
+      }
+      
       
 
       glfwSwapInterval(0);
@@ -236,18 +212,16 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
     glfwSetWindowShouldClose(window, 1);
   }
-  float cameraSpeed = 2.0f * deltaTime; // adjust accordingly
+  float cameraSpeed = 2.0f * deltaTime;
   struct vec3 vecA;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     vecA = VscalarMulitply(cameraSpeed, cameraFront);
     cameraPos = addVectors(cameraPos, vecA);
   }
-    //normalize3d(&cameraPos);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
     vecA = VscalarMulitply(cameraSpeed, cameraFront);
     cameraPos = subtractVectors(cameraPos, vecA);
   }
-    //normalize3d(&cameraPos);
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
     vecA = crossProduct(cameraFront, yAxis);
     normalize3d(&vecA);

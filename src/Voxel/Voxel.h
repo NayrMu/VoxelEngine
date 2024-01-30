@@ -59,21 +59,22 @@ void _InitVoxel(struct Voxel* voxel) {
     };
 
     const float fFace[30] = {
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        
         0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
         -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
     };
 
     const float wFace[30] = {
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
         -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
         -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
     };
 
     const float eFace[30] = {
@@ -86,12 +87,12 @@ void _InitVoxel(struct Voxel* voxel) {
     };
 
     const float sFace[30] = {
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
         0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y,
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
         -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+        -0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
     };
 
     float nFace[30] = {

@@ -111,7 +111,7 @@ void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t si
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, size, &array[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), &array[0], GL_STATIC_DRAW);
   // apos attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);

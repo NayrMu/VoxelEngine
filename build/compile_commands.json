@@ -1,19 +1,19 @@
 [
 {
   "directory": "C:/Users/rkmun/source/repos/VoxelEngine/build/src",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/source_files.dir/includes_CXX.rsp -g -std=gnu++20 -O3 -o CMakeFiles\\source_files.dir\\main.cpp.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\main.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/source_files.dir/includes_CXX.rsp -g -std=gnu++20 -O0 -o CMakeFiles\\source_files.dir\\main.cpp.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\main.cpp",
   "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/main.cpp",
   "output": "src/CMakeFiles/source_files.dir/main.cpp.obj"
 },
 {
   "directory": "C:/Users/rkmun/source/repos/VoxelEngine/build/src",
-  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O3 -o CMakeFiles\\source_files.dir\\glad.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\glad.c",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O0 -o CMakeFiles\\source_files.dir\\glad.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\glad.c",
   "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/glad.c",
   "output": "src/CMakeFiles/source_files.dir/glad.c.obj"
 },
 {
   "directory": "C:/Users/rkmun/source/repos/VoxelEngine/build/src",
-  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O3 -o CMakeFiles\\source_files.dir\\STBIMAGE.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\STBIMAGE.c",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O0 -o CMakeFiles\\source_files.dir\\STBIMAGE.c.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\STBIMAGE.c",
   "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/STBIMAGE.c",
   "output": "src/CMakeFiles/source_files.dir/STBIMAGE.c.obj"
 }
