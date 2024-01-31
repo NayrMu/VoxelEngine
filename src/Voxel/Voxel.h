@@ -50,58 +50,58 @@ void _InitVoxel(struct Voxel* voxel) {
     };
 
     const float bFace[30] = {
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        0.25f,  0.25f, -0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.25f,  0.25f, -0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.25f,  0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
     };
 
     const float fFace[30] = {
         
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        0.25f, -0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        -0.25f, -0.25f,  0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.25f, -0.25f,  0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
     };
 
     const float wFace[30] = {
-        -0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        -0.25f,  0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        -0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        -0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        -0.25f, -0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
     };
 
     const float eFace[30] = {
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
-        0.5f,  0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
-        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        0.5f, -0.5f, -0.5f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
+        0.25f,  0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y,
+        0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.25f, -0.25f, -0.25f,  faceTextureCoords[1].x + textureWidth, faceTextureCoords[1].y + textureHeight,
+        0.25f, -0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y + textureHeight,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[1].x, faceTextureCoords[1].y,
     };
 
     const float sFace[30] = {
-        0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-        0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
-        -0.5f, -0.5f, -0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
-        -0.5f, -0.5f,  0.5f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
+        0.25f, -0.25f, -0.25f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+        0.25f, -0.25f,  0.25f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        0.25f, -0.25f,  0.25f,  faceTextureCoords[2].x + textureWidth, faceTextureCoords[2].y + textureHeight,
+        -0.25f, -0.25f, -0.25f,  faceTextureCoords[2].x, faceTextureCoords[2].y,
+        -0.25f, -0.25f,  0.25f,  faceTextureCoords[2].x, faceTextureCoords[2].y + textureHeight,
     };
 
     float nFace[30] = {
-        -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
-        0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
-        0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
-        -0.5f,  0.5f,  0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y + textureHeight,
-        -0.5f,  0.5f, -0.5f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
+        -0.25f,  0.25f, -0.25f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
+        0.25f,  0.25f, -0.25f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
+        0.25f,  0.25f,  0.25f,  faceTextureCoords[0].x + textureWidth, faceTextureCoords[0].y + textureHeight,
+        -0.25f,  0.25f,  0.25f,  faceTextureCoords[0].x, faceTextureCoords[0].y + textureHeight,
+        -0.25f,  0.25f, -0.25f,  faceTextureCoords[0].x, faceTextureCoords[0].y,
     };
     
     memcpy(voxel->northFace, nFace, sizeof(nFace));

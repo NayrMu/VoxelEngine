@@ -1,3 +1,3 @@
 #pragma once
 
-#define C_chunkSize 8
+#define C_chunkSize 32
