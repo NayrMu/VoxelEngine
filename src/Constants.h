@@ -1,3 +1,3 @@
 #pragma once
 
-#define C_chunkSize 32
+extern const int C_chunkSize;

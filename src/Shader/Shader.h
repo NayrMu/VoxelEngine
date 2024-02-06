@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #include "../stb_image.h"
 
@@ -106,11 +107,14 @@ void shader_addTexture(const char* image, unsigned int* texture) {
 }
 
 void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t size) {
-  
+
+        
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-  glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), &array[0], GL_STATIC_DRAW);
+  
+  glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), &array[0], GL_STREAM_DRAW);
+  
   // apos attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -120,4 +124,14 @@ void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t si
                         (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
   
+}
+
+void updateGLBuffer(std::vector<float> array, int size, int offSet) {
+  float* bufferData = new float[size];
+  
+  std::copy(array.begin(), array.end(), bufferData);
+  
+  glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(float), &bufferData[0]);
+
+  delete[] bufferData;
 }

@@ -9,7 +9,7 @@
             "stopAtEntry": false,
             "externalConsole": true,
             "cwd": "${workspaceFolder}",
-            "program": "c:/Users/rkmun/source/repos/VoxelEngine/build/Debug/outDebug",
+            "program": "C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\build\\src\\source_files",
             "MIMode": "gdb",
             "miDebuggerPath": "gdb",
             "setupCommands": [

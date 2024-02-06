@@ -2,75 +2,51 @@
 
 #include <cmath>
 #include <algorithm>
+#include <random>
 #include <vector>
 #include "../Constants.h"
 #include "../GMath/GMath.h"
 #include "../Voxel/Voxel.h"
+#include "../Noise/noise.h"
 
-void seedGen(int p[512], int size, unsigned int seed) {
+#define FASTFLOOR(x) ( ((int)(x)<(x)) ? ((int)x) : ((int)x-1 ) )
 
-  unsigned int newNum = ~seed;
+unsigned int seedGen() {
+
+  unsigned int newNum = rand() % 1000;
   newNum += 620;
-  newNum %= 255;
 
-  for (int i = 0; i < size; i++) {
-    p[i] = newNum;
+  newNum *= 3;
 
-    newNum *= 300;
-    newNum %= 255;
-  }
-}
+  newNum = newNum & 620;
 
-double fade(double t) {
-  return t * t * t * (t * (t * 6 - 15) + 10);
-}
-
-double Plerp(double t, double a, double b) {
-  return a + t * (b - a);
-}
-
-float grad(int hash, float x, float y) {
-  int h = hash & 7;            // Use first 4 bits for gradient hash
-  float grad = 1.0 + (h & 3); // Gradient value 1-4
-  if (h & 4) grad = -grad;     // Randomly invert half of them
-  return (grad * x + grad * y); // Gradient times (x, y)
-}
-
-double noise(double x, double y, int p[512]) {
-  int X = (int)floor(x) & 255;
-  int Y = (int)floor(y) & 255;
-
-  x -= (double)floor(x);
-  y -= (double)floor(y);
-
-  float u = fade(x);
-  float v = fade(y);
-
+  return newNum;
   
-
-  int a = p[X] + Y, b = p[X + 1] + Y;
-
-// And add blended results from 2 corners of the cell (scaled according to the fade curve values)
-  return Plerp(v, Plerp(u, grad(p[a], x, y), grad(p[b], x - 1, y)),
-                  Plerp(u, grad(p[a + 1], x, y - 1), grad(p[b + 1], x - 1, y - 1)));
 }
 
-void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int p[512]) {
-  if (offsetZ = 2) {
-  }
 
+
+void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed) {
+  
   double globalX;
   double globalZ;
+  int flatIndex = 0;
   for (int i = 0; i < chunkSize; i++) {
     for (int j = 0; j < chunkSize; j++) {
-      globalX = (double)(2* j) + (offsetX * C_chunkSize);
-      globalZ = (double)(2* i) + (offsetZ * C_chunkSize);
+      
+      globalX = (double)(j) + (offsetX * C_chunkSize);
+      globalZ = (double)(i) + (offsetZ * C_chunkSize);
 
       // Use the global position as input to the noise function
-      float height = noise(globalX * 0.1f, globalZ * 0.1f, p) + 1.0f;
-      int newHeight = (height * 0.5f * 28.0f) + 4;
-      for (int k = 0; k < newHeight; k++) {
-        chunk->chunk[i][j][k].w = 1;
+      float height = noise2(globalX * 0.034f, globalZ * 0.034f) + 1.0f;
+      
+      int newHeight = (height *  32);
+      //printf("X: %d Z: %d Y: %d\n", offsetX, offsetZ, newHeight);
+      for (int k = 0; k < chunkSize; k++) {
+        flatIndex = i * (chunkSize * chunkSize) + (j * chunkSize) + k;
+        if (k < newHeight) {
+          chunk->chunk[flatIndex].w = 1;
+        }
       }
     }
   }
@@ -110,40 +86,91 @@ void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel 
   int offsettXAdd = (Chunk.offsetX*chunkSize);
   int offsettYAdd = (Chunk.offsetY*chunkSize);
   int offsettZAdd = (Chunk.offsetZ*chunkSize);
+  int flatIndex = 0;
+
   for (int i = 0; i < chunkSize; i++) {
     for (int j = 0; j < chunkSize; j++) {
       for (int k = 0; k < chunkSize; k++) {
-        if (Chunk.chunk[i][j][k].w == 1) {
+        flatIndex = i * (chunkSize * chunkSize) + (j * chunkSize) + k;
+
+        
+        int Jprev = flatIndex - chunkSize;
+        int Iprev = flatIndex - (chunkSize*chunkSize);
+        int Kprev = flatIndex - 1;
+        int Jnext = flatIndex + chunkSize;
+        int Inext = flatIndex + (chunkSize*chunkSize);
+        int Knext = flatIndex + 1;
+
+        if (Chunk.chunk[flatIndex].w == 1) {
           struct vec3 transform = {0.5f*((float)j + offsettXAdd), 0.5f*((float)k + offsettYAdd), 0.5f*((float)i + offsettZAdd)};
 
           bool isLeftEndOfRow = j == 0;
-          bool isRightEndOfRow = j == chunkSize - 1;
-          bool isFrontOfColumn = i == chunkSize - 1;
+          bool isRightEndOfRow = j == chunkSize-1;
+          bool isFrontOfColumn = i == chunkSize-1;
           bool isBackOfColumn = i == 0;
-          bool isTopOfStack = k == chunkSize - 1;
+          bool isTopOfStack = k == chunkSize-1;
           bool isBottomOfStack = k == 0;
 
-          if (isTopOfStack || (!isTopOfStack && Chunk.chunk[i][j][k + 1].w == 0)) {
+          bool isNotBlockToLeft = false;
+          bool isNotBlockToRight = false;
+          bool isNotBlockBehind = false;
+          bool isNotBlockInFront = false;
+          bool isNotBlockAbove = false;
+          bool isNotBlockBelow = false;
+
+          if (!(isLeftEndOfRow)) {
+            isNotBlockToLeft = Chunk.chunk[Jprev].w == 0;
+          }
+          if (!(isRightEndOfRow)) {
+            isNotBlockToRight = Chunk.chunk[Jnext].w == 0;
+          }
+          if (!(isFrontOfColumn )) {
+            isNotBlockInFront = Chunk.chunk[Inext].w == 0;
+          }
+          if (!(isBackOfColumn)) {
+            isNotBlockBehind = Chunk.chunk[Iprev].w == 0;
+          }
+          if (!(isTopOfStack)) {
+            isNotBlockAbove = Chunk.chunk[Knext].w == 0;
+          }
+          if (!(isBottomOfStack)) {
+            isNotBlockBelow = Chunk.chunk[Kprev].w == 0;
+          }
+
+          if (isTopOfStack) {
             pushFace(chunkData, voxel, transform, 0);
           }
-
-          if (isBottomOfStack || (!isBottomOfStack && Chunk.chunk[i][j][k - 1].w == 0)) {
+          if (!(isTopOfStack) && isNotBlockAbove) {
+            pushFace(chunkData, voxel, transform, 0);
+          }
+          if (isBottomOfStack) {
             pushFace(chunkData, voxel, transform, 1);
           }
-
-          if (isLeftEndOfRow || (!isLeftEndOfRow && Chunk.chunk[i][j - 1][k].w == 0)) {
+          if (!(isBottomOfStack) && isNotBlockBelow) {
+            pushFace(chunkData, voxel, transform, 1);
+          }
+          if (isLeftEndOfRow) {
             pushFace(chunkData, voxel, transform, 2);
           }
-
-          if (isRightEndOfRow || (!isRightEndOfRow && Chunk.chunk[i][j + 1][k].w == 0)) {
+          if (!(isLeftEndOfRow) && isNotBlockToLeft) {
+            pushFace(chunkData, voxel, transform, 2);
+          }
+          if (isRightEndOfRow) {
             pushFace(chunkData, voxel, transform, 3);
           }
-
-          if (isFrontOfColumn || (!isFrontOfColumn && Chunk.chunk[i + 1][j][k].w == 0)) {
+          if (!(isRightEndOfRow) && isNotBlockToRight) {
+            pushFace(chunkData, voxel, transform, 3);
+          }
+          if (isFrontOfColumn) {
             pushFace(chunkData, voxel, transform, 4);
           }
-
-          if (isBackOfColumn || (!isBackOfColumn && Chunk.chunk[i - 1][j][k].w == 0)) {
+          if (!(isFrontOfColumn) && isNotBlockInFront) {
+            pushFace(chunkData, voxel, transform, 4);
+          }
+          if (isBackOfColumn) {
+            pushFace(chunkData, voxel, transform, 5);
+          }
+          if (!(isBackOfColumn) && isNotBlockBehind) {
             pushFace(chunkData, voxel, transform, 5);
           }
         }

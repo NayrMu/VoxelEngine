@@ -1,5 +1,6 @@
 #pragma once 
 #include <string.h>
+#include <vector>
 
 #include "../Constants.h"
 
@@ -22,11 +23,11 @@ struct Voxel {
 };
 
 struct Chunk {
-    struct Ivec4 chunk [C_chunkSize][C_chunkSize][C_chunkSize];
+    std::vector<Ivec4> chunk;
 
-    int offsetX;
-    int offsetY;
-    int offsetZ;
+    int offsetX = 0;
+    int offsetY = 0;
+    int offsetZ = 0;
 };
 
 

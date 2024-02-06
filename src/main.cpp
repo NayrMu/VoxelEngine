@@ -4,16 +4,24 @@
 *  Hours Worked ~22.5
 *
 *  TODO:
-*  1. Implement texture atlas as one large image
-*  2. Implement texture offest at face generation
-*  3. Use different method then .insert()
+*  1. Optimize Chunk Loading
+*     - Load only new chunks
+*     - Load Chunks one at a time?
+*     - Reduce nested loops
+*  2. Add Different Blocks
+*  3. Include vertical loading
+*  4. Cull Chunks Edges
 */
 
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Test/TimeTest.h"
+
 #include "Constants.h"
+const int C_chunkSize = 128;
+
 #include "GMath/GMath.h" // math before voxel
 #include "Voxel/Voxel.h"
 #include "Shader/Shader.h"
@@ -24,16 +32,17 @@
 
 #include "stb_image.h"
 
+const unsigned int seed = seedGen();
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1080;
+const unsigned int SCR_HEIGHT = 920;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
-void updateChunks(float*& VA, std::vector<float> &LC, int *numVerts, Voxel voxel);
+void updateChunks(int *numVerts, Voxel voxel, Chunk* chunk);
 
-struct vec3 cameraPos = {4.0f, 8.5f, 3.0f};
+struct vec3 cameraPos = {32.0f, 33.0f, 32.0f};
 struct vec3 cameraFront = {0.0f, 0.0f, -1.0f};
 struct vec3 lookVec;
 struct vec3 xAxis = {1.0f, 0.0f, 0.0f};
@@ -122,24 +131,28 @@ int main() {
     const char* dirtFile = "../../src/DirtAtlas.png";
     shader_addTexture(dirtFile, &textureDirt);
 
-    float* verticesArray = new float[0];
-    std::vector<float> loadedChunks;
+    
     int numVerts = 0;
-    updateChunks(verticesArray, loadedChunks, &numVerts, voxel);
-    loadedChunks.clear();
+    Chunk* chunk = new Chunk;
+    chunk->chunk.resize(C_chunkSize* C_chunkSize* C_chunkSize, {0,0,0,0});
 
     unsigned int chunkVBO, chunkVAO;
     glGenVertexArrays(1, &chunkVAO);
     glGenBuffers(1, &chunkVBO);
 
     struct mat4 projectionMat = makeProjectionMatrix(45.0f, 0.1f, 100.0f, (float)SCR_WIDTH, (float)SCR_HEIGHT);
-    int prevChunkX = 0;
-    int prevChunkY = 1;
-    int prevChunkZ = 0;
+    int prevChunkX = 1000000;
+    int prevChunkY = 1000000;
+    int prevChunkZ = 1000000;
+    unsigned int maxLoadSize = 80000000 * sizeof(float);
+    
+    shader_ArrBuffs(chunkVAO, chunkVBO, nullptr, maxLoadSize);
+    printf("Init Done!");
+
+    
+    glBindTexture(GL_TEXTURE_2D, textureGrass);
 
     while (!glfwWindowShouldClose(window)) {
-      
-      
 
       processInput(window);
       
@@ -149,7 +162,7 @@ int main() {
       glFrontFace(GL_CCW);
       glCullFace(GL_FRONT);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       
 
@@ -168,26 +181,37 @@ int main() {
       
       shader_use(&shaderProgram);
 
-      glBindTexture(GL_TEXTURE_2D, textureGrass);
-
-      
-
-      int currentChunkX = 2*(cameraPos.x / C_chunkSize);
-      int currentChunkY = 2*(cameraPos.y / C_chunkSize);
-      int currentChunkZ = 2*(cameraPos.z / C_chunkSize);
-      
-      if ((prevChunkX != currentChunkX) || (prevChunkY != currentChunkY) || (prevChunkZ != currentChunkZ)) {
-        updateChunks(verticesArray, loadedChunks, &numVerts, voxel);
-        loadedChunks.clear();
+      int currentChunkX = ((int)(cameraPos.x * 2) / C_chunkSize);
+      if (cameraPos.x < 0) {
+        currentChunkX -=1;
       }
-      shader_ArrBuffs(chunkVAO, chunkVBO, verticesArray, numVerts);
+      int currentChunkY = ((int)(cameraPos.y * 2) / C_chunkSize);
+      if (cameraPos.y < 0) {
+        currentChunkY -=1;
+      }
+      int currentChunkZ = ((int)(cameraPos.z * 2) / C_chunkSize);
+      if (cameraPos.z < 0) {
+        currentChunkZ -=1;
+      }
+
+      //printf("X: %d Y: %d Z %d\n", currentChunkX, currentChunkY, currentChunkZ);
+
+      if ((prevChunkX != currentChunkX) || (prevChunkY != currentChunkY) || (prevChunkZ != currentChunkZ)) {
+        float Time;
+        startTimer(&Time); 
+        if (chunk != nullptr) {
+          updateChunks(&numVerts, voxel, chunk);
+          
+        }
+        endTimer(&Time);
+      }
+      printf("%d\n", numVerts / 5);
       glDrawArrays(GL_TRIANGLES, 0, numVerts/5);
       
-
-      glBindVertexArray(0);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
       
-      glBindTexture(GL_TEXTURE_2D, 0);
+
+      
+      
       
 
       glfwSwapInterval(0);
@@ -204,7 +228,10 @@ int main() {
       deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame; 
     }
-    delete[] verticesArray;
+    delete chunk;
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDeleteBuffers(1, &chunkVBO);
     glDeleteVertexArrays(1, &chunkVAO);
     glDeleteProgram((GLuint)shaderProgram.ID);
@@ -217,7 +244,7 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
     glfwSetWindowShouldClose(window, 1);
   }
-  float cameraSpeed = 4.0f * deltaTime;
+  float cameraSpeed = 10.0f * deltaTime;
   struct vec3 vecA;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     vecA = VscalarMulitply(cameraSpeed, cameraFront);
@@ -278,46 +305,60 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  // make sure the viewport matches the new window dimensions; note that width
-  // and height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
 }
 
-void updateChunks(float*& VA, std::vector<float> &LC, int *numVerts, Voxel voxel) {
+void updateChunks(int *numVerts, Voxel voxel, Chunk* chunk) {
   
-  int p[512];
-  unsigned int seed = 213456789;
-  seedGen(p, 512, seed);
-
-  Chunk chunk;
-  
-  int currentChunkX = 2*(cameraPos.x / C_chunkSize);
-  int currentChunkY = 2*(cameraPos.y / C_chunkSize);
-  int currentChunkZ = 2*(cameraPos.z / C_chunkSize);
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 10; j++) {
-      std::vector<float> allData;
+  int currentChunkX = ((int)(cameraPos.x * 2) / C_chunkSize);
+  if (cameraPos.x < 0) {
+    currentChunkX -=1;
+  }
+  int currentChunkY = ((int)(cameraPos.y * 2) / C_chunkSize);
+  if (cameraPos.y < 0) {
+    currentChunkY -=1;
+  }
+  int currentChunkZ = ((int)(cameraPos.z * 2) / C_chunkSize);
+  if (cameraPos.z < 0) {
+    currentChunkZ -=1;
+  }
+  int flatIndex = 0;
+  std::vector<float> allData;
+  int chunkInfo[81] = {0};
+  int worldSize = 9;
+  int totalLoadedSize = 0;
+  for (int i = 0; i < worldSize; i++) {
+    for (int j = 0; j < worldSize; j++) {
+      if (i == 0) {
+        flatIndex = j;
+      }
+      else { flatIndex = i * worldSize + j; }
       
-      chunk.offsetX = i + currentChunkX -5;
-      chunk.offsetY = 0;
-      chunk.offsetZ = j + currentChunkZ -5;
-
-      generateChunk(C_chunkSize, &chunk, chunk.offsetX, chunk.offsetY, chunk.offsetZ, p);
-
-      cullChunk(&allData, chunk, C_chunkSize, voxel);
       
-      LC.insert(LC.end(), allData.begin(), allData.end());
+      chunk->offsetX = j + currentChunkX - (worldSize / 2);
+      chunk->offsetY = 0;
+      chunk->offsetZ = i + currentChunkZ - (worldSize / 2);
+
       
+      if (( (std::abs(chunk->offsetX) - std::abs(currentChunkX)) > (worldSize / 2) ) 
+      && (std::abs(chunk->offsetZ) - std::abs(currentChunkY) > (worldSize / 2))) {
+        printf("Skipped\n");
+        continue;
+      }
+      
+      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed);
+      cullChunk(&allData, *chunk, C_chunkSize, voxel);
+      *numVerts = allData.size();
+      
+      chunkInfo[flatIndex] = totalLoadedSize;
+      
+      totalLoadedSize += *numVerts;
+
+      glBufferSubData(GL_ARRAY_BUFFER, chunkInfo[flatIndex] * sizeof(float), allData.size() * sizeof(float), &allData[0]);
+      allData.clear();
+
+      std::fill(chunk->chunk.begin(), chunk->chunk.end(), Ivec4{0, 0, 0, 0});
     }
   }
-  // Check if verticesArray is already allocated, if not, allocate it
-    if (VA == nullptr) {
-        VA = new float[LC.size()];
-    } else {
-        // If it's already allocated, resize it
-        delete[] VA;
-        VA = new float[LC.size()];
-    }
-  std::copy(LC.begin(), LC.end(), VA);
-  *numVerts = LC.size();
+  *numVerts = totalLoadedSize;
 }
