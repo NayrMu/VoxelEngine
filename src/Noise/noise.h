@@ -30,7 +30,7 @@
 #define FADE(t) ( t * t * t * ( t * ( t * 6 - 15 ) + 10 ) )
 
 #define FASTFLOOR(x) ( ((int)(x)<(x)) ? ((int)x) : ((int)x-1 ) )
-#define LERP(t, a, b) ((a) + (t)*((b)-(a)))
+#define LERP(t, a, b) ((a) + (t * (b - a)))
 
 
 //---------------------------------------------------------------------

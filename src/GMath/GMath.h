@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 struct vec4 {
     float x, y, z, w;
 };
@@ -115,11 +117,15 @@ void translate(struct vec3 vec, struct mat4* mat) {
   mat->m[1][3] += vec.y;
   mat->m[2][3] += vec.z;
 }
-void translateQuad(float array[], vec3 transform) {
+void translateQuad(float *array, vec3 transform) {
 
-  for (int i = 0; i < 30; ++i) {
-    array[i] = array[i];
+  for (int i = 0; i < 30; i += 5) {
+    array[i] += transform.x;
+    array[i + 1] += transform.y;
+    array[i + 2] += transform.z;
   }
+}
+void translateQuad(std::vector<float> array, vec3 transform) {
 
   for (int i = 0; i < 30; i += 5) {
     array[i] += transform.x;
@@ -280,10 +286,10 @@ void scale(struct vec3 vec, struct mat4* mat) {
 }
 
 struct mat4 makeProjectionMatrix(float fov, float nearPlane, float farPlane, float width, float height) {
-    struct mat4 mat = makeIdentityMatrix();
+  struct mat4 mat = makeIdentityMatrix();
   float a = width / height;
 
-  float r = nearPlane * tan(fov / 2);
+  float r = nearPlane * tan((fov * (M_PI / 180.0f)) / 2);
   float t = r / a;
 
   mat.m[0][0] = nearPlane / r;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -7,7 +9,9 @@ void startTimer(float* time) {
 }
 void endTimer(float* startTime) {
   float endTime = glfwGetTime();
-  float totalTime = endTime - *startTime;
+  *startTime = endTime - *startTime;
 
-  printf("Total Time: %f\n", totalTime);
+  if (*startTime > 0.00001f) {
+    printf("%f\n", *startTime);
+  }
 }

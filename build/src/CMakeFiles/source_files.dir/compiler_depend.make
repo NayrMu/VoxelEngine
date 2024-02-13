@@ -40,8 +40,8 @@ src/CMakeFiles/source_files.dir/STBIMAGE.c.obj: C:/Users/rkmun/source/repos/Voxe
   C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h
 
 src/CMakeFiles/source_files.dir/glad.c.obj: C:/Users/rkmun/source/repos/VoxelEngine/src/glad.c \
+  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h \
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
-  C:/msys64/ucrt64/include/KHR/khrplatform.h \
   C:/msys64/ucrt64/include/_bsd_types.h \
   C:/msys64/ucrt64/include/_mingw.h \
   C:/msys64/ucrt64/include/_mingw_mac.h \
@@ -313,10 +313,10 @@ src/CMakeFiles/source_files.dir/glad.c.obj: C:/Users/rkmun/source/repos/VoxelEng
 
 src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelEngine/src/main.cpp \
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h \
+  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h \
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/Noise/noise.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h \
-  C:/msys64/ucrt64/include/KHR/khrplatform.h \
   C:/msys64/ucrt64/include/_mingw.h \
   C:/msys64/ucrt64/include/_mingw_mac.h \
   C:/msys64/ucrt64/include/_mingw_off_t.h \
@@ -649,8 +649,6 @@ C:/msys64/ucrt64/include/stdint.h:
 
 C:/msys64/ucrt64/include/combaseapi.h:
 
-C:/msys64/ucrt64/include/KHR/khrplatform.h:
-
 C:/msys64/ucrt64/include/c++/13.1.0/bits/localefwd.h:
 
 C:/msys64/ucrt64/include/swprintf.inl:
@@ -701,6 +699,16 @@ C:/msys64/ucrt64/include/c++/13.1.0/initializer_list:
 
 C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/vector.tcc:
+
+C:/msys64/ucrt64/include/apiset.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/cwchar:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_construct.h:
+
+C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/range_access.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/cpp_type_traits.h:
@@ -724,10 +732,6 @@ C:/msys64/ucrt64/include/ctype.h:
 C:/msys64/ucrt64/include/c++/13.1.0/tr1/modified_bessel_func.tcc:
 
 C:/msys64/ucrt64/include/_mingw_unicode.h:
-
-C:/msys64/ucrt64/include/c++/13.1.0/bits/vector.tcc:
-
-C:/msys64/ucrt64/include/apiset.h:
 
 C:/msys64/ucrt64/include/errhandlingapi.h:
 
@@ -1300,10 +1304,6 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/specfun.h:
 C:/msys64/ucrt64/include/c++/13.1.0/bits/std_abs.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_algo.h:
-
-C:/msys64/ucrt64/include/c++/13.1.0/cwchar:
-
-C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_construct.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_function.h:
 

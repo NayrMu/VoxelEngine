@@ -21,7 +21,7 @@ src/CMakeFiles/source_files.dir/glad.c.obj: \
  C:/msys64/ucrt64/include/errno.h C:/msys64/ucrt64/include/string.h \
  C:/msys64/ucrt64/include/sec_api/string_s.h \
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
- C:/msys64/ucrt64/include/KHR/khrplatform.h \
+ C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h \
  C:/msys64/ucrt64/include/stdint.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stddef.h \
