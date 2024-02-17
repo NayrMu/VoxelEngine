@@ -31,7 +31,7 @@ unsigned int seedGen() {
 
 
 
-void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed, unsigned int outBuff, unsigned int inBuff) {
+void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed, unsigned int outBuff, unsigned int inBuff, int *chunkPtr) {
   
    
   //
@@ -43,25 +43,17 @@ void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ,
   float wavelength2 = C_chunkSize / 3.41f;
   GLint maxCount = 0;
 
-  CHECK_GL_ERROR();
-  glDispatchCompute(128, 128, 128);
-  CHECK_GL_ERROR();
-  glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
-  CHECK_GL_ERROR();
+  //CHECK_GL_ERROR();
   
-  int size = chunk->chunk.size();
-  std::vector<int> outputData(size);
-  CHECK_GL_ERROR();
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
-  CHECK_GL_ERROR();
-  GLint *ptr;
-  ptr = (GLint *) glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 0 + size * sizeof(float), GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
-  CHECK_GL_ERROR();
-  if (ptr == nullptr) {
+  //CHECK_GL_ERROR();
+  glDispatchCompute(C_chunkSize / 8, C_chunkSize / 8, C_chunkSize / 8);
+  GLsync syncObject = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+  //CHECK_GL_ERROR();
+  glClientWaitSync(syncObject, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
+  //CHECK_GL_ERROR();
+  
+  if (chunkPtr == nullptr) {
     std::cout << "nah fam" << std::endl;
-  }
-  for (int i = 0; i < size; i++) {
-    outputData[i] = ptr[i];
   }
   
   
@@ -73,19 +65,19 @@ void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ,
       
       globalX = (double)(j) + (offsetX * C_chunkSize);
       float freqX = globalX / wavelength2;
-      float hillHeight = 14.0f * (noise2(globalX / wavelength1, globalZ / wavelength1) + 0.9f);
+      //float hillHeight = 14.0f * (noise2(globalX / wavelength1, globalZ / wavelength1) + 0.9f);
 
       for (int k = 0; k < chunkSize; k++) {
         globalY = (double)(k) + (offsetY * C_chunkSize);
         flatIndex = i * (chunkSize * chunkSize) + (j * chunkSize) + k;
 
-        float density = 85.0f * (noise3(freqX, freqZ,  globalY / wavelength2) + 0.6f);
+        //float density = 85.0f * (noise3(freqX, freqZ,  globalY / wavelength2) + 0.6f);
 
         float Time;
         //startTimer(&Time);
-        float height = (LERP(0.23f, (hillHeight + density), hillHeight)) + 10.0f;
+        //float height = (LERP(0.23f, (hillHeight + density), hillHeight)) + 10.0f;
         //endTimer(&Time);
-        //int height = outputData[0] * 80;
+        int height = chunkPtr[flatIndex];
         
         if (k < height) {
           chunk->chunk[flatIndex] = 1;
@@ -93,6 +85,8 @@ void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ,
       }
     }
   }
+  glDeleteSync(syncObject);
+  //CHECK_GL_ERROR();
   //
 }
 

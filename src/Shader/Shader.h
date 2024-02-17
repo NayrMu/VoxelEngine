@@ -170,22 +170,29 @@ void updateGLBuffer(std::vector<float> array, int size, int offSet) {
   delete[] bufferData;
 }
 
-void bindComputeBuffs(unsigned int inBuff, unsigned int outBuff, size_t size) {
+void bindComputeBuffs(unsigned int inBuff, unsigned int outBuff, size_t size, GLint *&ptr) {
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, inBuff);
-  CHECK_GL_ERROR();
+  //CHECK_GL_ERROR();
   glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), nullptr, GL_MAP_WRITE_BIT);
-  CHECK_GL_ERROR();
+  //CHECK_GL_ERROR();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inBuff);
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
   glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), NULL, GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
-  CHECK_GL_ERROR();
+  //CHECK_GL_ERROR();
   
-  CHECK_GL_ERROR();
+  //CHECK_GL_ERROR();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outBuff);
+  //CHECK_GL_ERROR();
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
+  //CHECK_GL_ERROR();
   
-  
+  float Time;
+  startTimer(&Time);
+  ptr = (GLint *) glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 0 + size * sizeof(float), GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
+  endTimer(&Time);
+  //CHECK_GL_ERROR();
   
 
 }

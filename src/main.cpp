@@ -43,7 +43,7 @@ const unsigned int SCR_HEIGHT = 860;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff);
+void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff, int *chunkPtr);
 void setCurrentChunk();
 
 struct vec3 cameraPos = {32.0f, 33.0f, 32.0f};
@@ -112,6 +112,9 @@ const char *fragmentShaderSouce =
 
 const char *noiseComputeShader = 
     "#version 430\n"
+    "int noise3(int x, int y, int z) {\n"
+    "   return (x + y) / 2;;\n"
+    "}\n"
     "\n"
     "layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;\n"
     "// Input and output buffer definitions\n"
@@ -127,11 +130,11 @@ const char *noiseComputeShader =
     "\n"
     "void main() {\n"
     "    // Calculate the global block index in the chunk\n"
-    "    uvec3 globalBlockID = gl_GlobalInvocationID.xyz;\n"
+    "    ivec3 globalBlockID = ivec3(gl_GlobalInvocationID.xyz);\n"
     "\n"
     "    // Convert global block index to buffer index\n"
-    "    uint flatIndex = globalBlockID.x + globalBlockID.z * 128 + globalBlockID.y * 128 * 128;\n"
-    "    result[globalBlockID.x] = 1;"
+    "    int flatIndex = (globalBlockID.x * 128) + (globalBlockID.z * 128 * 128) + globalBlockID.y;\n"
+    "    result[flatIndex] = noise3(globalBlockID.x, globalBlockID.z, globalBlockID.y);"
     "\n"
     "\n"
     "}\n";
@@ -180,7 +183,8 @@ int main() {
     unsigned int outBuff;
     glGenBuffers(1, &outBuff);
     glGenBuffers(1, &inBuff);
-    bindComputeBuffs(inBuff, outBuff, (C_chunkSize * C_chunkSize * C_chunkSize));
+    GLint *chunkPtr = nullptr;
+    bindComputeBuffs(inBuff, outBuff, (C_chunkSize * C_chunkSize * C_chunkSize), chunkPtr);
     shader_use(&Cshader);
     CHECK_GL_ERROR();
     
@@ -210,7 +214,7 @@ int main() {
     int prevChunkX = 1000000;
     int prevChunkY = 1000000;
     int prevChunkZ = 1000000;
-    unsigned int maxLoadSize = 40000000 * sizeof(float);
+    unsigned int maxLoadSize = 100000000 * sizeof(float);
     
     shader_ArrBuffs(chunkVAO, chunkVBO, nullptr, maxLoadSize);
     printf("Init Done!");
@@ -236,9 +240,9 @@ int main() {
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       }
       else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-      
+      //CHECK_GL_ERROR();
       shader_use(&shaderProgram);
-
+      //CHECK_GL_ERROR();
       lookVec = addVectors(cameraPos, cameraFront);
       struct mat4 viewMat = makeLookAtMatrix(cameraPos, lookVec, yAxis);
       
@@ -259,19 +263,19 @@ int main() {
       glUniform3fv(camLoc, 1, (GLfloat*)&cameraPos);
       
       
-      CHECK_GL_ERROR();
+      
       setCurrentChunk();
 
       if ((prevChunkX != currentChunk[0]) || (prevChunkY != currentChunk[1]) || (prevChunkZ != currentChunk[2])) {
         if (chunk != nullptr) {
           
           float Time;
-          startTimer(&Time);
+          //startTimer(&Time);
           shader_use(&Cshader);
-          updateChunks(&numVerts, UVoxi, chunk, outBuff, inBuff);
+          updateChunks(&numVerts, UVoxi, chunk, outBuff, inBuff, chunkPtr);
           int numTris = (numVerts * 0.6f) / 3;
-          printf("\n%d\n", numTris);
-          endTimer(&Time);
+          //printf("\n%d\n", numTris);
+          //endTimer(&Time);
         }
       }
       shader_use(&shaderProgram);
@@ -292,6 +296,8 @@ int main() {
       deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame; 
     }
+    
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     delete chunk;
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
@@ -375,7 +381,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff) {
+void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff, int *chunkPtr) {
   
   setCurrentChunk();
   int flatIndex = 0;
@@ -392,7 +398,7 @@ void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuf
       }
       else { flatIndex = i * worldSize + j; }
       
-      
+      //printf("\n%d\n", flatIndex);
       chunk->offsetX = j + currentChunk[0] - (worldSize / 2);
       chunk->offsetY = 0;
       chunk->offsetZ = i + currentChunk[2] - (worldSize / 2);
@@ -404,12 +410,14 @@ void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuf
         continue;
       }
       
-      
-      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed, outBuff, inBuff);
-      
+      float Time;
+      startTimer(&Time);
+      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed, outBuff, inBuff, chunkPtr);
+      endTimer(&Time);
       
       
       cullChunk(&allData, *chunk, C_chunkSize, voxel);
+      
       *numVerts = allData.size();
       
       
@@ -418,7 +426,7 @@ void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuf
       totalLoadedSize += *numVerts;
       
       glBufferSubData(GL_ARRAY_BUFFER, chunkInfo[flatIndex] * sizeof(float), allData.size() * sizeof(float), &allData[0]);
-      
+      //CHECK_GL_ERROR();
       allData.clear();
       
       std::fill(chunk->chunk.begin(), chunk->chunk.end(), 0);
