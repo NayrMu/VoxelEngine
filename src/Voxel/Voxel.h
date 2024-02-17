@@ -23,7 +23,7 @@ struct voxel {
 };
 
 struct Chunk {
-  std::vector<Ivec4> chunk;
+  std::vector<unsigned char> chunk;
 
   int offsetX = 0;
   int offsetY = 0;
@@ -35,23 +35,26 @@ class Voxel  {
 private:
   voxel Cube;
   unsigned int indices[6] = {0, 1, 2, 2, 3, 0};
-  const int atlasWidth = 48;
-  const int atlasHeight = 8;
-  const int numTextures = 6;
+  const int atlasWidth = 14;
+  const int atlasHeight = 16;
+  const int numTextures = 9;
   // Calculate the width and height of each individual texture
   const float textureWidth = 1.0f / (float)numTextures;
   const float textureHeight = 1.0f;
-  struct vec2 faceTextureCoords[6] = {
+  struct vec2 faceTextureCoords[9] = {
     {0.0f, 0.0f},
-    {0.166f, 0.0f},
-    {0.333f, 0.0f},
-    {0.5f, 0.0f},
-    {0.666f, 0.0f},
-    {0.833f, 0.0f},
+    {1.0/9.0, 0.0f},
+    {2.0/9.0, 0.0f},
+    {3.0/9.0, 0.0f},
+    {4.0/9.0, 0.0f},
+    {5.0/9.0, 0.0f},
+    {6.0/9.0, 0.0f},
+    {7.0/9.0, 0.0f},
+    {9.0/9.0, 0.0f},
   };
 
-  int currentTexIdx[3] = {0, 1, 2};
-  int grassTexIdx[3] = {0, 1, 2};
+  int currentTexIdx[3] = {1, 0, 2};
+  int grassTexIdx[3] = {1, 0, 2};
   int dirtTexIdx[3] = {2, 2, 2};
   int stoneTexIdx[3] = {3, 4, 5};
 

@@ -43,7 +43,7 @@ const unsigned int SCR_HEIGHT = 860;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk);
+void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff);
 void setCurrentChunk();
 
 struct vec3 cameraPos = {32.0f, 33.0f, 32.0f};
@@ -68,7 +68,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 const char *vertexShaderSource = 
-    "#version 330 core\n"
+    "#version 440 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "layout (location = 1) in vec2 texCoord;\n"
     "out vec2 TexCoord;\n"
@@ -89,7 +89,7 @@ const char *vertexShaderSource =
     "   TexCoord = vec2(texCoord.x, texCoord.y);\n"
     "}\0";
 const char *fragmentShaderSouce = 
-    "#version 330 core\n"
+    "#version 440 core\n"
     "in vec2 TexCoord;\n"
     "in vec3 FragPos;\n"
     "in vec3 CameraPos;\n"
@@ -110,13 +110,38 @@ const char *fragmentShaderSouce =
     "    else { FragColor = TexColor; }\n"
     "}\n";
 
+const char *noiseComputeShader = 
+    "#version 430\n"
+    "\n"
+    "layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;\n"
+    "// Input and output buffer definitions\n"
+    "layout(std430, binding = 0) buffer InputBuffer {\n"
+    "    // Input data for each block (e.g., block properties)\n"
+    "    int data[];\n"
+    "};\n"
+    "\n"
+    "layout(std430, binding = 1) buffer OutputBuffer {\n"
+    "    // Output data for each block (e.g., computation result)\n"
+    "    int result[];\n"
+    "};\n"
+    "\n"
+    "void main() {\n"
+    "    // Calculate the global block index in the chunk\n"
+    "    uvec3 globalBlockID = gl_GlobalInvocationID.xyz;\n"
+    "\n"
+    "    // Convert global block index to buffer index\n"
+    "    uint flatIndex = globalBlockID.x + globalBlockID.z * 128 + globalBlockID.y * 128 * 128;\n"
+    "    result[globalBlockID.x] = 1;"
+    "\n"
+    "\n"
+    "}\n";
 int main() {
+    GLint maxCount;
     
-    Voxel* UVoxi = new Voxel();
 
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     #ifdef __APPLE__
@@ -141,12 +166,26 @@ int main() {
         printf("Failed to initialize GLAD");
         return -1;
     } 
+    if (GL_ARB_shader_storage_buffer_object) {
+        std::cout << "ARB_shader_storage_buffer_object extension is supported." << std::endl;
+    } else {
+        std::cerr << "ARB_shader_storage_buffer_object extension is not supported." << std::endl;
+        return -1;
+    }
 
 
     Shader shaderProgram = shader_create(vertexShaderSource, fragmentShaderSouce);
-
+    Shader Cshader = Cshader_create(noiseComputeShader);
+    unsigned int inBuff;
+    unsigned int outBuff;
+    glGenBuffers(1, &outBuff);
+    glGenBuffers(1, &inBuff);
+    bindComputeBuffs(inBuff, outBuff, (C_chunkSize * C_chunkSize * C_chunkSize));
+    shader_use(&Cshader);
+    CHECK_GL_ERROR();
+    
     unsigned int textureGrass;
-    const char* grassFile = "../../src/GrassAtlas.png";
+    const char* grassFile = "../../src/Game16x16.png";
     shader_addTexture(grassFile, &textureGrass);
     unsigned int textureDirt;
     const char* dirtFile = "../../src/DirtAtlas.png";
@@ -155,11 +194,16 @@ int main() {
     
     int numVerts = 0;
     Chunk* chunk = new Chunk;
-    chunk->chunk.resize(C_chunkSize* C_chunkSize* C_chunkSize, {0,0,0,0});
+    chunk->chunk.resize(C_chunkSize* C_chunkSize* C_chunkSize, 0);
 
     unsigned int chunkVBO, chunkVAO;
     glGenVertexArrays(1, &chunkVAO);
     glGenBuffers(1, &chunkVBO);
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        // Handle the error
+        std::cout << error << std::endl;
+    }
 
     struct mat4 projectionMat = makeProjectionMatrix(110.0f, 0.1f, 100.0f, (float)SCR_WIDTH, (float)SCR_HEIGHT);
     
@@ -174,6 +218,8 @@ int main() {
     
     glBindTexture(GL_TEXTURE_2D, textureGrass);
 
+    
+    Voxel* UVoxi = new Voxel();
     while (!glfwWindowShouldClose(window)) {
       
       
@@ -191,26 +237,29 @@ int main() {
       }
       else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
       
-      
+      shader_use(&shaderProgram);
 
       lookVec = addVectors(cameraPos, cameraFront);
       struct mat4 viewMat = makeLookAtMatrix(cameraPos, lookVec, yAxis);
-
+      
       int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
+      
       glUniformMatrix4fv(viewLoc, 1, GL_TRUE, (GLfloat*)&viewMat.m);
+      
       int projectionLoc = glGetUniformLocation(shaderProgram.ID, "projection");
+      
       glUniformMatrix4fv(projectionLoc, 1, GL_TRUE, (GLfloat*)&projectionMat.m);
 
       struct mat4 modelMatrix = makeIdentityMatrix();
 
       int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
       glUniformMatrix4fv(modelLoc, 1, GL_TRUE, (GLfloat*)&modelMatrix.m);
-
+      
       int camLoc = glGetUniformLocation(shaderProgram.ID, "cameraPos");
       glUniform3fv(camLoc, 1, (GLfloat*)&cameraPos);
       
-      shader_use(&shaderProgram);
-
+      
+      CHECK_GL_ERROR();
       setCurrentChunk();
 
       if ((prevChunkX != currentChunk[0]) || (prevChunkY != currentChunk[1]) || (prevChunkZ != currentChunk[2])) {
@@ -218,13 +267,14 @@ int main() {
           
           float Time;
           startTimer(&Time);
-          updateChunks(&numVerts, UVoxi, chunk);
+          shader_use(&Cshader);
+          updateChunks(&numVerts, UVoxi, chunk, outBuff, inBuff);
           int numTris = (numVerts * 0.6f) / 3;
           printf("\n%d\n", numTris);
           endTimer(&Time);
         }
       }
-      
+      shader_use(&shaderProgram);
       glDrawArrays(GL_TRIANGLES, 0, numVerts/5);
 
 
@@ -325,7 +375,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk) {
+void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff) {
   
   setCurrentChunk();
   int flatIndex = 0;
@@ -355,12 +405,13 @@ void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk) {
       }
       
       
-      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed);
+      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed, outBuff, inBuff);
       
       
       
       cullChunk(&allData, *chunk, C_chunkSize, voxel);
       *numVerts = allData.size();
+      
       
       chunkInfo[flatIndex] = totalLoadedSize;
       
@@ -370,7 +421,7 @@ void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk) {
       
       allData.clear();
       
-      std::fill(chunk->chunk.begin(), chunk->chunk.end(), Ivec4{0, 0, 0, 0});
+      std::fill(chunk->chunk.begin(), chunk->chunk.end(), 0);
       
       
     }

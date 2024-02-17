@@ -11,6 +11,8 @@
 //#include "../Noise/snoise.h"
 #include "../Test/TimeTest.h"
 
+
+
 #define FASTFLOOR(x) ( ((int)(x)<(x)) ? ((int)x) : ((int)x-1 ) )
 
 
@@ -29,7 +31,7 @@ unsigned int seedGen() {
 
 
 
-void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed) {
+void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed, unsigned int outBuff, unsigned int inBuff) {
   
    
   //
@@ -39,6 +41,29 @@ void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ,
   int flatIndex = 0;
   float wavelength1 = C_chunkSize / 0.65f;
   float wavelength2 = C_chunkSize / 3.41f;
+  GLint maxCount = 0;
+
+  CHECK_GL_ERROR();
+  glDispatchCompute(128, 128, 128);
+  CHECK_GL_ERROR();
+  glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+  CHECK_GL_ERROR();
+  
+  int size = chunk->chunk.size();
+  std::vector<int> outputData(size);
+  CHECK_GL_ERROR();
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
+  CHECK_GL_ERROR();
+  GLint *ptr;
+  ptr = (GLint *) glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 0 + size * sizeof(float), GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
+  CHECK_GL_ERROR();
+  if (ptr == nullptr) {
+    std::cout << "nah fam" << std::endl;
+  }
+  for (int i = 0; i < size; i++) {
+    outputData[i] = ptr[i];
+  }
+  
   
   for (int i = 0; i < chunkSize; i++) {
     
@@ -60,11 +85,10 @@ void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ,
         //startTimer(&Time);
         float height = (LERP(0.23f, (hillHeight + density), hillHeight)) + 10.0f;
         //endTimer(&Time);
-
-
+        //int height = outputData[0] * 80;
         
         if (k < height) {
-          chunk->chunk[flatIndex].w = 1;
+          chunk->chunk[flatIndex] = 1;
         }
       }
     }
@@ -118,12 +142,12 @@ void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel 
         flatIndex = i * (chunkSize * chunkSize) + (j * chunkSize) + k;
         
         
-        if (k < chunkSize - 1 && Chunk.chunk[flatIndex+1].w != 0) {
-          Chunk.chunk[flatIndex].w = 2;
+        if (k < chunkSize - 1 && Chunk.chunk[flatIndex+1] != 0) {
+          Chunk.chunk[flatIndex] = 2;
         }
 
-        if (k < chunkSize - 6 && Chunk.chunk[flatIndex+6].w != 0) {
-          Chunk.chunk[flatIndex].w = 3;
+        if (k < chunkSize - 6 && Chunk.chunk[flatIndex+6] != 0) {
+          Chunk.chunk[flatIndex] = 3;
         }
 
         int Jprev = flatIndex - chunkSize;
@@ -135,8 +159,8 @@ void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel 
 
         
         
-        if (Chunk.chunk[flatIndex].w != 0) {
-          voxel->setTextureOffset(Chunk.chunk[flatIndex].w);
+        if (Chunk.chunk[flatIndex] != 0) {
+          voxel->setTextureOffset(Chunk.chunk[flatIndex]);
           
           struct vec3 transform = {0.5f*((float)j + offsettXAdd), 0.5f*((float)k + offsettYAdd), 0.5f*((float)i + offsettZAdd)};
 
@@ -156,12 +180,12 @@ void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel 
 
           
           
-          isNotBlockAbove = !(isTopOfStack) ? (Chunk.chunk[Knext].w == 0) : false;
-          isNotBlockBelow = !(isBottomOfStack) ? (Chunk.chunk[Kprev].w == 0) : false;
-          isNotBlockToLeft = !(isLeftEndOfRow) ? Chunk.chunk[Jprev].w == 0 : false;
-          isNotBlockToRight = !(isRightEndOfRow) ? Chunk.chunk[Jnext].w == 0 : false;
-          isNotBlockInFront = !(isFrontOfColumn ) ? (Chunk.chunk[Inext].w == 0) : false;
-          isNotBlockBehind = !(isBackOfColumn) ? (Chunk.chunk[Iprev].w == 0) : false;
+          isNotBlockAbove = !(isTopOfStack) ? (Chunk.chunk[Knext] == 0) : false;
+          isNotBlockBelow = !(isBottomOfStack) ? (Chunk.chunk[Kprev] == 0) : false;
+          isNotBlockToLeft = !(isLeftEndOfRow) ? Chunk.chunk[Jprev] == 0 : false;
+          isNotBlockToRight = !(isRightEndOfRow) ? Chunk.chunk[Jnext] == 0 : false;
+          isNotBlockInFront = !(isFrontOfColumn ) ? (Chunk.chunk[Inext] == 0) : false;
+          isNotBlockBehind = !(isBackOfColumn) ? (Chunk.chunk[Iprev] == 0) : false;
 
           unsigned char edgeMask  = 0;
           edgeMask = (isTopOfStack << 5) | (isBottomOfStack << 4) | (isLeftEndOfRow << 3) | 

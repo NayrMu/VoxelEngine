@@ -13,8 +13,42 @@ typedef struct
   unsigned int ID;
 } Shader;
 
+Shader Cshader_create(const char* cShaderSource) {
+  Shader Cshader;
+  Cshader.ID = 0;
+  unsigned int compute;
 
+  int success;
+  char infoLog[512];
+  // compute shader
+  compute = glCreateShader(GL_COMPUTE_SHADER);
+  glShaderSource(compute, 1, &cShaderSource, NULL);
+  glCompileShader(compute);
 
+  glGetShaderiv(compute, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(compute, 512, NULL, infoLog);
+    printf("!!ERROR!! COMPUTE SHADER COMPILATION FAILED\n %s", infoLog);
+    return Cshader;  // Return an empty shader on failure
+  }
+  
+  // shader Program
+  Cshader.ID = glCreateProgram();
+  glAttachShader(Cshader.ID, compute);
+  glLinkProgram(Cshader.ID);
+
+  glGetProgramiv(Cshader.ID, GL_LINK_STATUS, &success);
+  if (!success) {
+    glGetProgramInfoLog(Cshader.ID, 512, NULL, infoLog);
+    printf("!!ERROR!! SHADER PROGRAM LINKING FAILED\n %s", infoLog);
+    return Cshader;  // Return an empty shader on failure
+  }
+
+  // delete the shaders as they're linked into our program now and no longer necessary
+  glDeleteShader(compute);
+
+  return Cshader;
+}
 Shader shader_create(const char* vertexShaderSource,
                      const char* fragmentShaderSource) {
   Shader shader;
@@ -134,4 +168,24 @@ void updateGLBuffer(std::vector<float> array, int size, int offSet) {
   glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(float), &bufferData[0]);
 
   delete[] bufferData;
+}
+
+void bindComputeBuffs(unsigned int inBuff, unsigned int outBuff, size_t size) {
+
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, inBuff);
+  CHECK_GL_ERROR();
+  glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), nullptr, GL_MAP_WRITE_BIT);
+  CHECK_GL_ERROR();
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inBuff);
+
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
+  glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), NULL, GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
+  CHECK_GL_ERROR();
+  
+  CHECK_GL_ERROR();
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outBuff);
+  
+  
+  
+
 }
