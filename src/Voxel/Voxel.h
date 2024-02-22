@@ -23,7 +23,7 @@ struct voxel {
 };
 
 struct Chunk {
-  std::vector<unsigned char> chunk;
+  std::vector<int> chunk;
 
   int offsetX = 0;
   int offsetY = 0;

@@ -324,17 +324,23 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/c++/13.1.0/algorithm \
+  C:/msys64/ucrt64/include/c++/13.1.0/atomic \
   C:/msys64/ucrt64/include/c++/13.1.0/backward/binders.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bit \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/algorithmfwd.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/alloc_traits.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/allocator.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_base.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_lockfree_defines.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_timed_wait.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_wait.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/basic_ios.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/basic_ios.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/basic_string.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/basic_string.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/char_traits.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/charconv.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/chrono.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/concept_check.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/cpp_type_traits.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/cxxabi_forced.h \
@@ -362,6 +368,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/c++/13.1.0/bits/new_allocator.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/ostream.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/ostream_insert.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/parse_numbers.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/postypes.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/predefined_ops.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/ptr_traits.h \
@@ -375,8 +382,11 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/c++/13.1.0/bits/ranges_util.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/refwrap.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/requires_hosted.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/semaphore_base.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/specfun.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/std_abs.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/std_mutex.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/std_thread.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_algo.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_algobase.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_bvector.h \
@@ -395,7 +405,9 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/c++/13.1.0/bits/streambuf_iterator.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/string_view.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/stringfwd.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/this_thread_sleep.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/uniform_int_dist.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/bits/unique_ptr.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/uses_allocator.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/uses_allocator_args.h \
   C:/msys64/ucrt64/include/c++/13.1.0/bits/utility.h \
@@ -410,6 +422,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/c++/13.1.0/cstdint \
   C:/msys64/ucrt64/include/c++/13.1.0/cstdio \
   C:/msys64/ucrt64/include/c++/13.1.0/cstdlib \
+  C:/msys64/ucrt64/include/c++/13.1.0/ctime \
   C:/msys64/ucrt64/include/c++/13.1.0/cwchar \
   C:/msys64/ucrt64/include/c++/13.1.0/cwctype \
   C:/msys64/ucrt64/include/c++/13.1.0/debug/assertions.h \
@@ -436,12 +449,16 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/c++/13.1.0/pstl/glue_numeric_defs.h \
   C:/msys64/ucrt64/include/c++/13.1.0/pstl/pstl_config.h \
   C:/msys64/ucrt64/include/c++/13.1.0/random \
+  C:/msys64/ucrt64/include/c++/13.1.0/ratio \
+  C:/msys64/ucrt64/include/c++/13.1.0/semaphore \
   C:/msys64/ucrt64/include/c++/13.1.0/stdexcept \
   C:/msys64/ucrt64/include/c++/13.1.0/stdlib.h \
+  C:/msys64/ucrt64/include/c++/13.1.0/stop_token \
   C:/msys64/ucrt64/include/c++/13.1.0/streambuf \
   C:/msys64/ucrt64/include/c++/13.1.0/string \
   C:/msys64/ucrt64/include/c++/13.1.0/string_view \
   C:/msys64/ucrt64/include/c++/13.1.0/system_error \
+  C:/msys64/ucrt64/include/c++/13.1.0/thread \
   C:/msys64/ucrt64/include/c++/13.1.0/tr1/bessel_function.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/tr1/beta_function.tcc \
   C:/msys64/ucrt64/include/c++/13.1.0/tr1/ell_integral.tcc \
@@ -493,6 +510,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/msys64/ucrt64/include/sec_api/string_s.h \
   C:/msys64/ucrt64/include/sec_api/sys/timeb_s.h \
   C:/msys64/ucrt64/include/sec_api/wchar_s.h \
+  C:/msys64/ucrt64/include/semaphore.h \
   C:/msys64/ucrt64/include/signal.h \
   C:/msys64/ucrt64/include/stddef.h \
   C:/msys64/ucrt64/include/stdint.h \
@@ -620,6 +638,8 @@ C:/msys64/ucrt64/include/math.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/pconfigintrin.h:
 
 C:/msys64/ucrt64/include/sec_api/stdio_s.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/ratio:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bit:
 
@@ -821,6 +841,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/amxtileintrin.h:
 
 C:/msys64/ucrt64/include/ncrypt.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/atomic:
+
 C:/msys64/ucrt64/include/oaidl.h:
 
 C:/msys64/ucrt64/include/objbase.h:
@@ -1001,6 +1023,8 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_numeric.h:
 
 C:/msys64/ucrt64/include/tvout.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/semaphore_base.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/char_traits.h:
 
 C:/msys64/ucrt64/include/unknwn.h:
@@ -1109,6 +1133,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512vnniintrin.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/nested_exception.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_base.h:
+
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512vnnivlintrin.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512vp2intersectvlintrin.h:
@@ -1122,6 +1148,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxifmaintrin.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxneconvertintrin.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxvnniint8intrin.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/stop_token:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avxvnniintrin.h:
 
@@ -1142,6 +1170,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xsaveoptintrin.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/f16cintrin.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/tr1/ell_integral.tcc:
+
+C:/msys64/ucrt64/include/c++/13.1.0/semaphore:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/fma4intrin.h:
 
@@ -1203,6 +1233,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/waitpkgintrin.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/wbnoinvdintrin.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/std_thread.h:
+
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/wmmintrin.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/clocale:
@@ -1227,9 +1259,21 @@ C:/msys64/ucrt64/include/c++/13.1.0/algorithm:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/algorithmfwd.h:
 
+C:/msys64/ucrt64/include/semaphore.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/locale_facets.tcc:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/allocator.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_lockfree_defines.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/cstdio:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_timed_wait.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/atomic_wait.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/unique_ptr.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/basic_ios.h:
 
@@ -1249,6 +1293,8 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/exception_ptr.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/charconv.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/chrono.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/streambuf.tcc:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/ranges_cmp.h:
@@ -1266,6 +1312,8 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_uninitialized.h:
 C:/msys64/ucrt64/include/c++/13.1.0/bits/ios_base.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/istream.tcc:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/parse_numbers.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/iterator_concepts.h:
 
@@ -1303,6 +1351,8 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/specfun.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/std_abs.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/bits/std_mutex.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_algo.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_function.h:
@@ -1321,6 +1371,10 @@ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_vector.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/bits/string_view.tcc:
 
+C:/Users/rkmun/source/repos/VoxelEngine/src/Test/TimeTest.h:
+
+C:/msys64/ucrt64/include/c++/13.1.0/bits/this_thread_sleep.h:
+
 C:/msys64/ucrt64/include/c++/13.1.0/bits/utility.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/cctype:
@@ -1337,9 +1391,9 @@ C:/msys64/ucrt64/include/c++/13.1.0/cstddef:
 
 C:/msys64/ucrt64/include/c++/13.1.0/cstdint:
 
-C:/msys64/ucrt64/include/c++/13.1.0/cstdio:
-
 C:/msys64/ucrt64/include/c++/13.1.0/cstdlib:
+
+C:/msys64/ucrt64/include/c++/13.1.0/ctime:
 
 C:/msys64/ucrt64/include/c++/13.1.0/cwctype:
 
@@ -1372,6 +1426,8 @@ C:/msys64/ucrt64/include/c++/13.1.0/streambuf:
 C:/msys64/ucrt64/include/c++/13.1.0/string:
 
 C:/msys64/ucrt64/include/c++/13.1.0/system_error:
+
+C:/msys64/ucrt64/include/c++/13.1.0/thread:
 
 C:/msys64/ucrt64/include/c++/13.1.0/tr1/bessel_function.tcc:
 
@@ -1418,5 +1474,3 @@ C:/msys64/ucrt64/include/wchar.h:
 C:/msys64/ucrt64/include/wctype.h:
 
 C:/Users/rkmun/source/repos/VoxelEngine/src/Shader/Shader.h:
-
-C:/Users/rkmun/source/repos/VoxelEngine/src/Test/TimeTest.h:

@@ -8,9 +8,9 @@
 *     - Load only new chunks
 *     - Load Chunks one at a time?
 *     - Reduce nested loops
-*  2. Add Different Blocks
-*  3. Include vertical loading
-*  4. Cull Chunks Edges
+*  2. Fix why nothing is being output from compute shaders
+*  3. Remove All teh unnessary letfover boiler plate in ChunkManager functions
+*  4. Abstract away more boiler plate
 */
 
 #include <iostream>
@@ -37,17 +37,17 @@ const int bsConvert = 2;
 const unsigned int seed = seedGen();
 
 int lineDraw = -1;
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 860;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff, int *chunkPtr);
+void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff, int *chunkPtr, int *cullPtr, Shader *chunkShader, Shader *cullShader);
 void setCurrentChunk();
 
 struct vec3 cameraPos = {32.0f, 33.0f, 32.0f};
-int currentChunk[3] = {0, 0, 0};
+struct Ivec3 currentChunk = {0, 0, 0};
 struct vec3 cameraFront = {0.0f, 0.0f, -1.0f};
 struct vec3 lookVec;
 struct vec3 xAxis = {1.0f, 0.0f, 0.0f};
@@ -138,6 +138,82 @@ const char *noiseComputeShader =
     "\n"
     "\n"
     "}\n";
+const char* cullComputeShader = 
+    "#version 430\n"
+    "\n"
+    "#define C_chunkSize 128\n"
+    "#define isT_Edge(x) (x == C_chunkSize - 1)\n"
+    "#define isB_Edge(x) (x == 0)\n"
+    "\n"
+    "#define T_Neighbor(x, y) (!(isT_Edge(x)) ? int(isB_Edge(y)) : 0) \n"
+    "#define B_Neighbor(x, y) (!(isB_Edge(x)) ? int(isB_Edge(y)) : 0)\n"
+    "\n"
+    "    layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;\n"
+    "    // Input and output buffer definitions\n"
+    "    layout(std430, binding = 0) buffer InputBuffer {\n"
+    "        // Input data for each block (e.g., block properties)\n"
+    "        int data[];\n"
+    "    };\n"
+    "    \n"
+    "    layout(std430, binding = 1) buffer OutputBuffer {\n"
+    "        // Output data for each block (e.g., computation result)\n"
+    "        int result[];\n"
+    "    };\n\n"
+    "    \n"
+    "    void main() {\n"
+    "        // Calculate the global block index in the chunk\n"
+    "        ivec3 globalBlockID = ivec3(gl_GlobalInvocationID.xyz);\n"
+    "       int Bx = globalBlockID.x;\n"
+    "       int By = globalBlockID.y;\n"
+    "       int Bz = globalBlockID.z;\n"
+    "        // Convert global block index to buffer index\n"
+    "        int flatIndex = (globalBlockID.x * 128) + (globalBlockID.z * 128 * 128) + globalBlockID.y;\n"
+    "       int Xp = flatIndex - C_chunkSize;\n"
+    "        int Xn = flatIndex + C_chunkSize;\n"
+    "        int Zp = flatIndex - (C_chunkSize*C_chunkSize);\n"
+    "        int Zn = flatIndex + (C_chunkSize*C_chunkSize);\n"
+    "        int Yp = flatIndex - 1;\n"
+    "        int Yn = flatIndex + 1;\n"
+    "    \n"
+    "        int edgeMask = (int(isT_Edge(By)) << 5) | (int(isB_Edge(By)) << 4) | (int(isB_Edge(Bz)) << 3) \\\n"
+    "                         | (int(isT_Edge(Bz)) << 2) | (int(isT_Edge(Bx)) << 1) | (int(isB_Edge(Bx)));\n"
+    "        int neighborMask = (int(T_Neighbor(By, data[Yn])) << 5) | (int(B_Neighbor(By, data[Yp])) << 4) \\\n"
+    "                         | (int(B_Neighbor(Bz, data[Xp])) << 3) | (int(T_Neighbor(Bz, data[Xn])) << 2) \\\n"
+    "                         | (int(T_Neighbor(Bx, data[Zn])) << 1) | int(B_Neighbor(Bx, data[Zp]));\n"
+    "       int notEdgeMask = edgeMask ^ 63;\n"
+    "       int cmp = (notEdgeMask & neighborMask);\n" 
+    "       int pushMask = edgeMask | cmp;\n"
+    "       result[flatIndex] = pushMask;\n"
+    "    }\n";
+
+
+const char* depthVertexShaderSource = R"(
+    #version 440 core
+
+    layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec2 texCoord;
+    
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
+    void main()
+    {
+      vec4 WorldPos = model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+      gl_Position = projection * view * WorldPos;
+    }
+)";
+
+// Depth pre-pass fragment shader code
+const char* depthFragmentShaderSource = R"(
+    #version 440 core
+    
+    out float FragDepth;
+    void main()
+    {
+      // Output depth value
+      FragDepth = gl_FragCoord.z;
+    }
+)";
 int main() {
     GLint maxCount;
     
@@ -183,9 +259,22 @@ int main() {
     unsigned int outBuff;
     glGenBuffers(1, &outBuff);
     glGenBuffers(1, &inBuff);
-    GLint *chunkPtr = nullptr;
+    /*GLint *chunkPtr = nullptr;
     bindComputeBuffs(inBuff, outBuff, (C_chunkSize * C_chunkSize * C_chunkSize), chunkPtr);
+    Cshader.inBuff = &inBuff;
+    Cshader.outBuff = &outBuff;
+    Cshader.outPtr = chunkPtr;
+    CHECK_GL_ERROR();
     shader_use(&Cshader);
+    CHECK_GL_ERROR();
+    Shader Cullshader = Cshader_create(cullComputeShader);
+    Cullshader.inBuff = &inBuff;
+    Cullshader.outBuff = &outBuff;
+    Cullshader.outPtr = chunkPtr;
+    //;*/
+    Shader depthShader = shader_create(depthVertexShaderSource, depthFragmentShaderSource);
+    
+    
     CHECK_GL_ERROR();
     
     unsigned int textureGrass;
@@ -214,9 +303,10 @@ int main() {
     int prevChunkX = 1000000;
     int prevChunkY = 1000000;
     int prevChunkZ = 1000000;
-    unsigned int maxLoadSize = 100000000 * sizeof(float);
+    unsigned int maxLoadSize = 500000000 * sizeof(float);
     
     shader_ArrBuffs(chunkVAO, chunkVBO, nullptr, maxLoadSize);
+    
     printf("Init Done!");
 
     
@@ -224,73 +314,110 @@ int main() {
 
     
     Voxel* UVoxi = new Voxel();
+    ChunkManager ChunkManager(UVoxi, chunk, &Cshader, &Cshader);
+    ChunkManager.init_chunk_manager();
+
+
+
     while (!glfwWindowShouldClose(window)) {
       
-      
       processInput(window);
+
+      
+      ChunkManager.updateState(currentChunk, cameraPos);
       
       glClearColor(0.4f, 0.5f, 0.6f, 1.0f);
-      glEnable(GL_DEPTH_TEST);
+      //glEnable(GL_DEPTH_TEST);
+      glDepthMask(GL_TRUE);
+        
       glEnable(GL_CULL_FACE);
       glFrontFace(GL_CCW);
       glCullFace(GL_FRONT);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
       if (lineDraw == 1) {
         
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       }
       else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-      //CHECK_GL_ERROR();
-      shader_use(&shaderProgram);
-      //CHECK_GL_ERROR();
+
+      CHECK_GL_ERROR();
       lookVec = addVectors(cameraPos, cameraFront);
       struct mat4 viewMat = makeLookAtMatrix(cameraPos, lookVec, yAxis);
       
+      shader_use(&shaderProgram);
       int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-      
       glUniformMatrix4fv(viewLoc, 1, GL_TRUE, (GLfloat*)&viewMat.m);
-      
       int projectionLoc = glGetUniformLocation(shaderProgram.ID, "projection");
-      
       glUniformMatrix4fv(projectionLoc, 1, GL_TRUE, (GLfloat*)&projectionMat.m);
 
       struct mat4 modelMatrix = makeIdentityMatrix();
 
       int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
       glUniformMatrix4fv(modelLoc, 1, GL_TRUE, (GLfloat*)&modelMatrix.m);
-      
       int camLoc = glGetUniformLocation(shaderProgram.ID, "cameraPos");
       glUniform3fv(camLoc, 1, (GLfloat*)&cameraPos);
-      
-      
-      
-      setCurrentChunk();
 
-      if ((prevChunkX != currentChunk[0]) || (prevChunkY != currentChunk[1]) || (prevChunkZ != currentChunk[2])) {
+      shader_use(&depthShader);
+      int modelLoc2 = glGetUniformLocation(depthShader.ID, "model");
+      glUniformMatrix4fv(modelLoc2, 1, GL_TRUE, (GLfloat*)&modelMatrix.m);
+      int viewLoc2 = glGetUniformLocation(depthShader.ID, "view");
+      glUniformMatrix4fv(viewLoc2, 1, GL_TRUE, (GLfloat*)&viewMat.m);
+      int projectionLoc2 = glGetUniformLocation(depthShader.ID, "projection");
+      glUniformMatrix4fv(projectionLoc2, 1, GL_TRUE, (GLfloat*)&projectionMat.m);
+
+      ChunkManager.setCurrentChunk();
+      currentChunk = ChunkManager.getCurrenChunk();
+      cameraPos = ChunkManager.getCameraPos();
+
+      if ((prevChunkX != currentChunk.x) || (prevChunkY != currentChunk.y) || (prevChunkZ != currentChunk.z)) {
         if (chunk != nullptr) {
-          
-          float Time;
-          //startTimer(&Time);
-          shader_use(&Cshader);
-          updateChunks(&numVerts, UVoxi, chunk, outBuff, inBuff, chunkPtr);
-          int numTris = (numVerts * 0.6f) / 3;
-          //printf("\n%d\n", numTris);
-          //endTimer(&Time);
+          ChunkManager.signal_load();
         }
       }
+      if (ChunkManager.get_is_chunksloaded()) {
+        
+        int size = ChunkManager.get_world_data().size();
+        glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
+        float* mappedPtr = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, size * sizeof(float), GL_MAP_FLUSH_EXPLICIT_BIT | GL_MAP_WRITE_BIT);
+        
+        if (mappedPtr) {
+          
+          double Time;
+          startTimer(&Time);
+          memcpy(mappedPtr, ChunkManager.get_world_data().data(), size * sizeof(float));
+          endTimer(&Time);
+          glFlushMappedBufferRange(GL_ARRAY_BUFFER, 0, size * sizeof(float));
+          glUnmapBuffer(GL_ARRAY_BUFFER);
+        }
+        
+        numVerts = ChunkManager.getNumVerts();
+        ChunkManager.clear_world_data();
+        ChunkManager.set_is_chunks_loaded();
+      }
+      
+      /*
+      shader_use(&depthShader);
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LESS);
+      glColorMask(0,0,0,0);
+      glDrawArrays(GL_TRIANGLES, 0, numVerts/5);
+      */
       shader_use(&shaderProgram);
+      glDepthFunc(GL_LEQUAL);
+      glColorMask(1,1,1,1);
+      glDepthMask(GL_TRUE);
       glDrawArrays(GL_TRIANGLES, 0, numVerts/5);
 
-
-      glfwSwapInterval(1);
+      
+      glfwSwapInterval(0);
       glfwSwapBuffers(window);
       glfwPollEvents();
       
-      
 
-      prevChunkX = currentChunk[0];
-      prevChunkY = currentChunk[1];
-      prevChunkZ = currentChunk[2];
+      prevChunkX = currentChunk.x;
+      prevChunkY = currentChunk.y;
+      prevChunkZ = currentChunk.z;
 
       float currentFrame = glfwGetTime();
       deltaTime = currentFrame - lastFrame;
@@ -381,73 +508,3 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void updateChunks(int *numVerts, Voxel *voxel, Chunk* chunk, unsigned int outBuff, unsigned int inBuff, int *chunkPtr) {
-  
-  setCurrentChunk();
-  int flatIndex = 0;
-  std::vector<float> allData;
-  allData.reserve(6000000);
-  int chunkInfo[49] = {0};
-  int worldSize = 7;
-  int totalLoadedSize = 0;
-  for (int i = 0; i < worldSize; i++) {
-    for (int j = 0; j < worldSize; j++) {
-      
-      if (i == 0) {
-        flatIndex = j;
-      }
-      else { flatIndex = i * worldSize + j; }
-      
-      //printf("\n%d\n", flatIndex);
-      chunk->offsetX = j + currentChunk[0] - (worldSize / 2);
-      chunk->offsetY = 0;
-      chunk->offsetZ = i + currentChunk[2] - (worldSize / 2);
-
-      
-      if (( (std::abs(chunk->offsetX) - std::abs(currentChunk[0])) > (worldSize / 2) ) 
-      && (std::abs(chunk->offsetZ) - std::abs(currentChunk[2]) > (worldSize / 2))) {
-        printf("Skipped\n");
-        continue;
-      }
-      
-      float Time;
-      startTimer(&Time);
-      generateChunk(C_chunkSize, chunk, chunk->offsetX, chunk->offsetZ, chunk->offsetY, seed, outBuff, inBuff, chunkPtr);
-      endTimer(&Time);
-      
-      
-      cullChunk(&allData, *chunk, C_chunkSize, voxel);
-      
-      *numVerts = allData.size();
-      
-      
-      chunkInfo[flatIndex] = totalLoadedSize;
-      
-      totalLoadedSize += *numVerts;
-      
-      glBufferSubData(GL_ARRAY_BUFFER, chunkInfo[flatIndex] * sizeof(float), allData.size() * sizeof(float), &allData[0]);
-      //CHECK_GL_ERROR();
-      allData.clear();
-      
-      std::fill(chunk->chunk.begin(), chunk->chunk.end(), 0);
-      
-      
-    }
-  }
-  *numVerts = totalLoadedSize;
-}
-
-void setCurrentChunk() {
-  currentChunk[0] = ((int)(cameraPos.x * bsConvert) / C_chunkSize);
-  if (cameraPos.x < 0) {
-    currentChunk[0] -=1;
-  }
-  currentChunk[1] = ((int)(cameraPos.y * bsConvert) / C_chunkSize);
-  if (cameraPos.y < 0) {
-    currentChunk[1] -=1;
-  }
-  currentChunk[2] = ((int)(cameraPos.z * bsConvert ) / C_chunkSize);
-  if (cameraPos.z < 0) {
-    currentChunk[2] -=1;
-  }
-}

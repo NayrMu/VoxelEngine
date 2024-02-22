@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/rkmun/source/repos/VoxelEngine/src/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/source_files.dir/includes_CXX.rsp -g -std=gnu++20 -O3 -o CMakeFiles\\source_files.dir\\main.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\main.cpp",
+  "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/main.cpp",
+  "output": "CMakeFiles/source_files.dir/main.obj"
+},
+{
+  "directory": "C:/Users/rkmun/source/repos/VoxelEngine/src/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O3 -o CMakeFiles\\source_files.dir\\glad.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\glad.c",
+  "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/glad.c",
+  "output": "CMakeFiles/source_files.dir/glad.obj"
+},
+{
+  "directory": "C:/Users/rkmun/source/repos/VoxelEngine/src/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/source_files.dir/includes_C.rsp -g -O3 -o CMakeFiles\\source_files.dir\\STBIMAGE.obj -c C:\\Users\\rkmun\\source\\repos\\VoxelEngine\\src\\STBIMAGE.c",
+  "file": "C:/Users/rkmun/source/repos/VoxelEngine/src/STBIMAGE.c",
+  "output": "CMakeFiles/source_files.dir/STBIMAGE.obj"
+}
+]

@@ -11,7 +11,17 @@
 typedef struct
 {
   unsigned int ID;
+  unsigned int *inBuff;
+  unsigned int *outBuff;
+  int *outPtr;
 } Shader;
+
+struct IndirectDrawCommand {
+    GLuint count;
+    GLuint instanceCount;
+    GLuint first;
+    GLuint baseInstance;
+};
 
 Shader Cshader_create(const char* cShaderSource) {
   Shader Cshader;
@@ -147,7 +157,7 @@ void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t si
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
   
-  glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), &array[0], GL_STREAM_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
   
   // apos attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -173,26 +183,23 @@ void updateGLBuffer(std::vector<float> array, int size, int offSet) {
 void bindComputeBuffs(unsigned int inBuff, unsigned int outBuff, size_t size, GLint *&ptr) {
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, inBuff);
-  //CHECK_GL_ERROR();
-  glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), nullptr, GL_MAP_WRITE_BIT);
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
+  glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), nullptr, GL_DYNAMIC_STORAGE_BIT);
+  CHECK_GL_ERROR();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inBuff);
 
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
   glBufferStorage(GL_SHADER_STORAGE_BUFFER, size * sizeof(float), NULL, GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
   
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outBuff);
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, outBuff);
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
   
-  float Time;
-  startTimer(&Time);
   ptr = (GLint *) glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 0 + size * sizeof(float), GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT);
-  endTimer(&Time);
-  //CHECK_GL_ERROR();
+  CHECK_GL_ERROR();
   
 
 }
