@@ -132,10 +132,10 @@ void shader_addTexture(const char* image, unsigned int* texture) {
   glBindTexture(GL_TEXTURE_2D, *texture);
   // set the texture wrapping/filtering options (on the currently bound texture
   // object)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
+                  GL_LINEAR_MIPMAP_LINEAR); 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   // load and generate the texture
   unsigned char *data =
@@ -155,7 +155,6 @@ void shader_ArrBuffs(unsigned int VAO, unsigned int VBO, float* array, size_t si
         
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
   
   glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
   

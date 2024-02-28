@@ -315,6 +315,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h \
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h \
   C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
+  C:/Users/rkmun/source/repos/VoxelEngine/src/Camera/Camera.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/Noise/noise.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h \
   C:/msys64/ucrt64/include/_mingw.h \
@@ -538,6 +539,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: C:/Users/rkmun/source/repos/VoxelE
   C:/Users/rkmun/source/repos/VoxelEngine/src/GMath/GMath.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/Shader/Shader.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/Test/TimeTest.h \
+  C:/Users/rkmun/source/repos/VoxelEngine/src/VRenderer/VRenderer.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel/Voxel.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/WorldGen/WorldGen.h \
   C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h
@@ -1253,6 +1255,10 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xtestintrin.h:
 
 C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h:
 
+C:/msys64/ucrt64/include/c++/13.1.0/cstdint:
+
+C:/Users/rkmun/source/repos/VoxelEngine/src/Camera/Camera.h:
+
 C:/Users/rkmun/source/repos/VoxelEngine/src/Noise/noise.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/algorithm:
@@ -1389,8 +1395,6 @@ C:/msys64/ucrt64/include/sys/timeb.h:
 
 C:/msys64/ucrt64/include/c++/13.1.0/cstddef:
 
-C:/msys64/ucrt64/include/c++/13.1.0/cstdint:
-
 C:/msys64/ucrt64/include/c++/13.1.0/cstdlib:
 
 C:/msys64/ucrt64/include/c++/13.1.0/ctime:
@@ -1474,3 +1478,5 @@ C:/msys64/ucrt64/include/wchar.h:
 C:/msys64/ucrt64/include/wctype.h:
 
 C:/Users/rkmun/source/repos/VoxelEngine/src/Shader/Shader.h:
+
+C:/Users/rkmun/source/repos/VoxelEngine/src/VRenderer/VRenderer.h:

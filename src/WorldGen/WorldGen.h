@@ -9,7 +9,6 @@
 #include "../GMath/GMath.h"
 #include "../Voxel/Voxel.h"
 #include "../Noise/noise.h"
-//#include "../Noise/snoise.h"
 #include "../Test/TimeTest.h"
 
 #define isT_Edge(x) (x == C_chunkSize - 1)
@@ -36,16 +35,11 @@ private:
 
   void chunkQueue() {
     while(true) {
-      if (m_loadNewChunks) {
-        printf("Running\n");
-        this->updateChunks();
-        this->m_loadNewChunks = false;
-        this->m_chunksLoaded = true;
-      }
+      generate_chunks();
     }
   }
 
-  void generateChunk(int chunkSize, struct Chunk* chunk, int offsetX, int offsetZ, int offsetY, int seed, Shader Cshader) {
+  void generateChunk(int chunkSize, int offsetX, int offsetZ, int offsetY, int seed) {
     double globalX;
     double globalZ;
     double globalY;
@@ -62,9 +56,6 @@ private:
     glClientWaitSync(syncObject, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
     CHECK_GL_ERROR();
     */
-    if (Cshader.outPtr == nullptr) {
-      std::cout << "nah fam" << std::endl;
-    }
     
     for (int i = 0; i < chunkSize; i++) {
       
@@ -77,7 +68,6 @@ private:
         float freqX = globalX / wavelength2;
 
         float noise1 = (noise2(freqX, freqZ) + 0.6f);
-        
 
         for (int k = 0; k < chunkSize; k++) {
           globalY = (double)(k) + (offsetY * C_chunkSize);
@@ -91,7 +81,7 @@ private:
           //int height = Cshader.outPtr[flatIndex];
           
           if (k < height) {
-            chunk->chunk[flatIndex] = 1;
+            m_chunk->chunk[flatIndex] = 1;
           }
         }
       }
@@ -114,27 +104,30 @@ private:
     if (face & 8) {
       faceArray = voxel.getWFace();
       translateQuad(faceArray, transform);
-      chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
+      //chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
     }
     if (face & 4) {
       faceArray = voxel.getEFace();
       translateQuad(faceArray, transform);
-      chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
+      //chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
     }
     if (face & 2) {
       faceArray = voxel.getFFace();
       translateQuad(faceArray, transform);
-      chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
+      //chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
     }
     if (face & 1) {
-      faceArray = voxel.getBFace();
+      faceArray = m_UVoxI->getBFace();
       translateQuad(faceArray, transform);
-      chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
+      if (faceArray) {
+        
+      }
+      //chunkData->insert(chunkData->end(), faceArray, faceArray + 30);
     }
     return;
   }
 
-  void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel *voxel, Shader CullShader) {
+  void cullChunk(std::vector<float>* chunkData, Chunk Chunk, int chunkSize, Voxel *voxel) {
     /*
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, *CullShader.inBuff);
     CHECK_GL_ERROR();
@@ -153,7 +146,6 @@ private:
     int offsettZAdd = (Chunk.offsetZ*chunkSize);
     int flatIndex = 0;
     struct vec3 transform;
-    
     for (int i = 0; i < chunkSize; i++) {
       
       transform.z = 0.5f*((float)i + offsettZAdd);
@@ -205,7 +197,7 @@ private:
     int seed;
     int flatIndex = 0;
     std::vector<float> allData;
-    allData.reserve(6000000);
+    allData.reserve(400000000);
     int chunkInfo[25] = {0};
     int worldSize = 5;
     int totalLoadedSize = 0;
@@ -217,7 +209,6 @@ private:
         }
         else { flatIndex = i * worldSize + j; }
         
-        //printf("\n%d\n", flatIndex);
         this->m_chunk->offsetX = j + this->m_currentChunk.x - (worldSize / 2);
         this->m_chunk->offsetY = 0;
         this->m_chunk->offsetZ = i + this->m_currentChunk.z - (worldSize / 2);
@@ -229,16 +220,11 @@ private:
           continue;
         }
         
-        //shader_use(this->m_chunkShader);
-        generateChunk(C_chunkSize, this->m_chunk, this->m_chunk->offsetX, this->m_chunk->offsetZ, this->m_chunk->offsetY, seed, *(this->m_chunkShader)); 
+        generateChunk(C_chunkSize, this->m_chunk->offsetX, this->m_chunk->offsetZ, this->m_chunk->offsetY, seed);
+        printf("naha\n");
+        cullChunk(&allData, *(this->m_chunk), C_chunkSize, this->m_UVoxI);
+        printf("noinoi\n");
         
-        double Time;
-        //startTimer(&Time);
-        //shader_use(this->m_cullShader);
-        //CHECK_GL_ERROR();
-        cullChunk(&allData, *(this->m_chunk), C_chunkSize, this->m_UVoxI, *(this->m_cullShader));
-        //endTimer(&Time);
-
         this->m_numVerts = allData.size();
         
         chunkInfo[flatIndex] = totalLoadedSize;
@@ -246,27 +232,39 @@ private:
         totalLoadedSize += this->m_numVerts;
         
         worldData.insert(worldData.end(), std::make_move_iterator(allData.begin()), std::make_move_iterator(allData.end()));
-        //CHECK_GL_ERROR();
         allData.clear();
         
         std::fill(this->m_chunk->chunk.begin(), this->m_chunk->chunk.end(), 0);
+        
       }
     }
     this->m_numVerts = totalLoadedSize;
   }
+
+  void __attribute__((optimize("O0"))) generate_chunks() {
+    if (m_loadNewChunks) {
+      printf("Running\n");
+      double Time;
+      startTimer(&Time);
+      this->updateChunks();
+      endTimer(&Time);
+      this->m_loadNewChunks = false;
+      this->m_chunksLoaded = true;
+    }
+  }
 public:
-  ChunkManager(Voxel *voxel, Chunk* chunk, Shader *chunkShader, Shader *cullShader) {
+  ChunkManager(Voxel *voxel, Chunk* chunk) {
     this->m_UVoxI = voxel;
     this->m_chunk = chunk;
-    this->m_chunkShader = chunkShader;
-    this->m_cullShader = cullShader;
   }
   void init_chunk_manager() {
     std::thread t(ChunkManager::chunkQueue, this);
     t.detach();
   }
   void signal_load() {
-    this->m_loadNewChunks = true;
+    if (!(this->m_loadNewChunks)) {
+      this->m_loadNewChunks = true;
+    }
   }
   Ivec3 getCurrenChunk() {
     return m_currentChunk;

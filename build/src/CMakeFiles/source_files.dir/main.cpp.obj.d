@@ -142,6 +142,11 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/ostream.tcc \
  C:/msys64/ucrt64/include/c++/13.1.0/istream \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/istream.tcc \
+ C:/msys64/ucrt64/include/c++/13.1.0/vector \
+ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_uninitialized.h \
+ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_vector.h \
+ C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_bvector.h \
+ C:/msys64/ucrt64/include/c++/13.1.0/bits/vector.tcc \
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h \
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h \
@@ -150,11 +155,6 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: \
  C:\Users\rkmun\source\repos\VoxelEngine\src\Test/TimeTest.h \
  C:\Users\rkmun\source\repos\VoxelEngine\src\Constants.h \
  C:\Users\rkmun\source\repos\VoxelEngine\src\GMath/GMath.h \
- C:/msys64/ucrt64/include/c++/13.1.0/vector \
- C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_uninitialized.h \
- C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_vector.h \
- C:/msys64/ucrt64/include/c++/13.1.0/bits/stl_bvector.h \
- C:/msys64/ucrt64/include/c++/13.1.0/bits/vector.tcc \
  C:/msys64/ucrt64/include/c++/13.1.0/math.h \
  C:/msys64/ucrt64/include/c++/13.1.0/cmath \
  C:/msys64/ucrt64/include/math.h \
@@ -220,4 +220,6 @@ src/CMakeFiles/source_files.dir/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.1.0/bits/this_thread_sleep.h \
  C:/msys64/ucrt64/include/semaphore.h \
  C:/Users/rkmun/source/repos/VoxelEngine/src/Noise/noise.h \
+ C:\Users\rkmun\source\repos\VoxelEngine\src\VRenderer/VRenderer.h \
+ C:/Users/rkmun/source/repos/VoxelEngine/src/Camera/Camera.h \
  C:\Users\rkmun\source\repos\VoxelEngine\src\stb_image.h

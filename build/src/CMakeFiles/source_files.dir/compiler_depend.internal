@@ -318,6 +318,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/GLFW/glfw3.h
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/KHR/khrplatform.h
  C:/Users/rkmun/source/repos/VoxelEngine/dependencies/include/glad/glad.h
+ C:/Users/rkmun/source/repos/VoxelEngine/src/Camera/Camera.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/Noise/noise.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h
  C:/msys64/ucrt64/include/_mingw.h
@@ -541,6 +542,7 @@ src/CMakeFiles/source_files.dir/main.cpp.obj
  C:/Users/rkmun/source/repos/VoxelEngine/src/GMath/GMath.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/Shader/Shader.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/Test/TimeTest.h
+ C:/Users/rkmun/source/repos/VoxelEngine/src/VRenderer/VRenderer.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/Voxel/Voxel.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/WorldGen/WorldGen.h
  C:/Users/rkmun/source/repos/VoxelEngine/src/stb_image.h
